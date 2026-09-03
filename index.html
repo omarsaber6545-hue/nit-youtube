@@ -632,27 +632,16 @@
       </div>
       <div class="modal-body modal-scrollable">
         
-        <!-- Discord Webhook Settings Box -->
-        <div class="webhook-settings-box">
-          <div class="webhook-header">
-            <label for="discordWebhookInput"><i class="fa-brands fa-discord"></i> رابط Webhook الديسكورد (قناة الإعلانات):</label>
-            <div class="webhook-status-pill disconnected" id="webhookStatusPill">
-              <span class="status-indicator-dot"></span>
-              <span id="webhookStatusText">غير متصل</span>
-            </div>
+        <!-- Bot Status Header -->
+        <div class="bot-status-header-box" style="background: rgba(88, 101, 242, 0.1); border: 1px solid rgba(88, 101, 242, 0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #fff; font-size: 0.92rem;">
+            <span style="width: 10px; height: 10px; border-radius: 50%; background: #2ED573; box-shadow: 0 0 10px #2ED573; display: inline-block;"></span>
+            <span>نظام النشر التلقائي عبر بوت الديسكورد 🤖</span>
           </div>
-          <div class="webhook-input-group">
-            <input type="url" id="discordWebhookInput" placeholder="الصق رابط الـ Webhook هنا (https://discord.com/api/webhooks/...)" dir="ltr">
-            <button type="button" id="testWebhookBtn" class="test-webhook-btn">
-              <i class="fa-solid fa-bolt"></i>
-              <span>فحص وتجربة</span>
-            </button>
-          </div>
-          <div id="webhookFeedbackMsg" class="webhook-feedback-msg"></div>
-          <small class="field-hint">💡 <strong>طريقة جلب الرابط:</strong> من سيرفر الديسكورد ➜ إعدادات روم الإعلانات (Edit Channel) ➜ Integrations ➜ Webhooks ➜ اضغط Copy Webhook URL والصقه هنا لمرة واحدة فقط.</small>
+          <span style="font-size: 0.82rem; color: #93A4F8; font-weight: 600;"><i class="fa-solid fa-bullhorn"></i> روم الإعلانات الرسمي</span>
         </div>
 
-        <!-- Announcement Form -->
+        <!-- Announcement Form (Direct Bot Dispatch) -->
         <form id="announcerForm" class="announcer-form" novalidate>
           <div class="form-group-modal">
             <label for="announcePlatform"><i class="fa-solid fa-layer-group"></i> المنصة المستهدفة:</label>
@@ -673,15 +662,6 @@
           <div class="form-group-modal">
             <label for="announceLink"><i class="fa-solid fa-link"></i> رابط المنشور أو الفيديو:</label>
             <input type="url" id="announceLink" placeholder="https://..." dir="ltr">
-          </div>
-
-          <div class="form-group-modal">
-            <label for="announcePing"><i class="fa-solid fa-bell"></i> التنبيه والمنشن:</label>
-            <select id="announcePing">
-              <option value="everyone">🔔 تنبيه الجميع (@everyone)</option>
-              <option value="youtube_role">▶️ رتبة تنبيهات اليوتيوب فقط</option>
-              <option value="none">🔕 بدون منشن (إشعار صامت)</option>
-            </select>
           </div>
 
           <div class="form-group-modal">

@@ -1,0 +1,112 @@
+{
+  "profile": {
+    "name": "عمر الشامي - Omar Creator",
+    "handle": "@omar_official",
+    "bio": "صانع محتوى وفيديوهات مميزة على اليوتيوب والتيك توك والسوشيال ميديا 🚀",
+    "avatar": "/assets/avatar.png",
+    "banner": "/assets/avatar.png",
+    "theme": "red-crimson",
+    "verified": true,
+    "location": "Egypt / Arab World",
+    "email": "contact@creator.com"
+  },
+  "socials": [
+    {
+      "id": "youtube",
+      "name": "YouTube",
+      "title": "قناة اليوتيوب الرسمية",
+      "username": "@CreatorYT",
+      "url": "https://youtube.com",
+      "icon": "fa-brands fa-youtube",
+      "color": "#FF0000",
+      "gradient": "linear-gradient(135deg, #FF0000, #b30000)",
+      "description": "فيديوهات وشروحات وتحديات جديدة أسبوعياً!",
+      "subscribers": "500K+",
+      "clicks": 2,
+      "active": true,
+      "featuredVideoId": "dQw4w9WgXcQ"
+    },
+    {
+      "id": "tiktok",
+      "name": "TikTok",
+      "title": "حساب التيك توك",
+      "username": "@CreatorTikTok",
+      "url": "https://tiktok.com",
+      "icon": "fa-brands fa-tiktok",
+      "color": "#00F2FE",
+      "gradient": "linear-gradient(135deg, #00F2FE, #FE0979)",
+      "description": "مقاطع قصيرة، كواليس ويوميات ممتعة كل يوم!",
+      "subscribers": "250K+",
+      "clicks": 1,
+      "active": true
+    },
+    {
+      "id": "instagram",
+      "name": "Instagram",
+      "title": "حساب الإنستغرام",
+      "username": "@CreatorInsta",
+      "url": "https://instagram.com",
+      "icon": "fa-brands fa-instagram",
+      "color": "#E1306C",
+      "gradient": "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
+      "description": "صور يومية، ستوريات وتفاعل مباشر معكم 📸",
+      "subscribers": "80K+",
+      "clicks": 0,
+      "active": true
+    },
+    {
+      "id": "facebook",
+      "name": "Facebook",
+      "title": "صفحة الفيسبوك الرسمية",
+      "username": "CreatorPage",
+      "url": "https://facebook.com",
+      "icon": "fa-brands fa-facebook",
+      "color": "#1877F2",
+      "gradient": "linear-gradient(135deg, #1877F2, #0d53ad)",
+      "description": "أحدث الأخبار، البثوث المباشرة والمنشورات الحصرية.",
+      "subscribers": "50K+",
+      "clicks": 0,
+      "active": true
+    },
+    {
+      "id": "discord",
+      "name": "Discord",
+      "title": "مجتمع وسيرفر الديسكورد",
+      "username": "Creator Community",
+      "url": "https://discord.gg",
+      "icon": "fa-brands fa-discord",
+      "color": "#5865F2",
+      "gradient": "linear-gradient(135deg, #5865F2, #3c45a5)",
+      "description": "انضم لسيرفرنا للدردشة، اللعب معاً والمشاركة في الفعاليات!",
+      "subscribers": "15K+",
+      "clicks": 0,
+      "active": true
+    }
+  ],
+  "customLinks": [],
+  "botSettings": {
+    "announcementChannelId": "1543682822471163974",
+    "defaultColor": "#5865F2",
+    "customEmbedTitle": "📢 إشعار جديد من صانع المحتوى!",
+    "footerText": "Social Hub • جميع الحقوق محفوظة"
+  },
+  "announcements": [
+    {
+      "id": "1788123320122",
+      "timestamp": "2026-08-30T20:55:20.122Z",
+      "platform": "tiktok",
+      "title": "cccc",
+      "link": "https://open.spotify.com/collection/tracks",
+      "message": "ي",
+      "channelName": "▶️・youtube-videos",
+      "channelId": "1543682822471163974",
+      "messageId": "1543725833695272973",
+      "dividerMessageId": "1543725837814202491",
+      "sentBy": "Web Dashboard"
+    }
+  ],
+  "analytics": {
+    "totalPageViews": 6,
+    "lastVisit": "2026-08-30T20:41:46.438Z"
+  }
+}

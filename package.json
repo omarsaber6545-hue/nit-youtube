@@ -1,18 +1,29 @@
 {
-  "name": "horizon-services-hub",
+  "name": "social-discord-hub",
   "version": "1.0.0",
-  "description": "Horizon Services — Official Social Media Hub & Discord Community Portal",
-  "main": "index.html",
+  "description": "Discord Bot and Modern Social Media Web Hub & Dashboard",
+  "main": "src/index.js",
+  "type": "commonjs",
   "scripts": {
-    "dev": "npx serve .",
-    "start": "npx serve ."
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
   },
   "keywords": [
-    "horizon-services",
-    "social-hub",
-    "discord",
-    "vercel"
+    "discord-bot",
+    "social-media",
+    "linktree",
+    "dashboard",
+    "youtube",
+    "tiktok",
+    "instagram",
+    "facebook"
   ],
-  "author": "Horizon Services",
-  "license": "ISC"
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.17.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "cors": "^2.8.5"
+  }
 }

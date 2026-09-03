@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم | Social Hub Admin</title>
+
+  <!-- Google Fonts: Cairo & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Admin Stylesheet -->
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <!-- Ambient background glow -->
+  <div class="admin-glow glow-top"></div>
+  <div class="admin-glow glow-bottom"></div>
+
+  <!-- Login Modal Overlay (Shown if not authenticated) -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <div class="login-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h2>تسجيل الدخول للوحة التحكم</h2>
+      <p>أدخل رمز المرور السري (PIN) للمتابعة (الافتراضي: <code>1234</code>)</p>
+      
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="pinInput">رمز المرور / PIN</label>
+          <div class="input-icon-wrap">
+            <i class="fa-solid fa-key"></i>
+            <input type="password" id="pinInput" placeholder="أدخل رمز PIN..." required autofocus>
+          </div>
+        </div>
+        <button type="submit" class="primary-btn submit-btn" id="loginBtn">
+          <span>دخول للوحة التحكم</span>
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+      </form>
+      <div class="login-error" id="loginError" style="display: none;"></div>
+    </div>
+  </div>
+
+  <!-- Main Admin Layout (Hidden until logged in) -->
+  <div class="admin-wrapper" id="adminApp" style="display: none;">
+    
+    <!-- Top Navbar -->
+    <header class="admin-topbar">
+      <div class="brand">
+        <i class="fa-solid fa-bolt-lightning brand-icon"></i>
+        <span>Social Hub <strong>Admin</strong></span>
+      </div>
+
+      <div class="topbar-actions">
+        <a href="index.html" target="_blank" class="secondary-btn">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>معاينة الموقع العام</span>
+        </a>
+        <button id="logoutBtn" class="logout-btn" title="تسجيل الخروج">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>خروج</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="admin-main-container">
+      
+      <!-- Sidebar Navigation -->
+      <aside class="admin-sidebar">
+        <nav class="sidebar-nav">
+          <button class="nav-tab active" data-tab="tab-profile">
+            <i class="fa-solid fa-user-pen"></i>
+            <span>الملف الشخصي</span>
+          </button>
+          <button class="nav-tab" data-tab="tab-socials">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span>إدارة الروابط</span>
+          </button>
+          <button class="nav-tab" data-tab="tab-announce">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>مرسل إشعارات ديسكورد</span>
+          </button>
+          <button class="nav-tab" data-tab="tab-analytics">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>الإحصائيات والتحليلات</span>
+          </button>
+          <button class="nav-tab" data-tab="tab-bot">
+            <i class="fa-solid fa-robot"></i>
+            <span>إعدادات البوت</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="admin-content">
+        
+        <!-- Tab 1: Profile Settings -->
+        <section class="tab-panel active" id="tab-profile">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-user-gear"></i> إعدادات الملف الشخصي</h2>
+            <p>تعديل الاسم والنبذة الشخصية والصور المعروضة في الموقع العام.</p>
+          </div>
+
+          <form id="profileForm" class="panel-card">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="nameInput">اسم صانع المحتوى</label>
+                <input type="text" id="nameInput" required placeholder="مثال: عمر الشامي">
+              </div>
+
+              <div class="form-group">
+                <label for="handleInput">اسم المعرف (Handle)</label>
+                <input type="text" id="handleInput" required placeholder="مثال: @creator" dir="ltr">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="bioInput">النبذة الشخصية (Bio)</label>
+                <textarea id="bioInput" rows="3" placeholder="اكتب نبذة ترحيبية بالجمهور..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="avatarInput">رابط الصورة الرمزية (Avatar URL)</label>
+                <input type="url" id="avatarInput" placeholder="https://..." dir="ltr">
+              </div>
+
+              <div class="form-group">
+                <label for="bannerInput">رابط صورة البانر (Banner URL)</label>
+                <input type="url" id="bannerInput" placeholder="https://..." dir="ltr">
+              </div>
+
+              <div class="form-group">
+                <label for="locationInput">الموقع / الدولة</label>
+                <input type="text" id="locationInput" placeholder="مثال: مصر / السعودية">
+              </div>
+
+              <div class="form-group">
+                <label for="emailInput">البريد الإلكتروني للأعمال</label>
+                <input type="email" id="emailInput" placeholder="contact@creator.com" dir="ltr">
+              </div>
+            </div>
+
+            <div class="panel-footer">
+              <button type="submit" class="primary-btn">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>حفظ بيانات الملف الشخصي</span>
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Tab 2: Social Media Links -->
+        <section class="tab-panel" id="tab-socials">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-share-nodes"></i> إدارة منصات التواصل الاجتماعي</h2>
+            <p>قم بتعديل الروابط وأسماء الحسابات وحالة التفعيل لكل منصة.</p>
+          </div>
+
+          <div id="socialsContainer" class="socials-list">
+            <!-- Dynamically populated social link forms -->
+          </div>
+
+          <div class="panel-card yt-featured-card">
+            <h3><i class="fa-brands fa-youtube" style="color: #ff0000;"></i> فيديو اليوتيوب المميز (Embedded Video)</h3>
+            <p class="card-hint">أدخل معرف فيديو اليوتيوب (YouTube Video ID) ليتم تضمينه وعرضه مباشرة داخل موقعك:</p>
+            <div class="input-group">
+              <div class="input-icon-wrap">
+                <i class="fa-solid fa-video"></i>
+                <input type="text" id="ytVideoIdInput" placeholder="مثال: dQw4w9WgXcQ (كود الفيديو بعد v=)" dir="ltr">
+              </div>
+            </div>
+            <button type="button" id="saveYtVideoBtn" class="primary-btn" style="margin-top: 10px;">
+              <i class="fa-solid fa-check"></i>
+              <span>تحديث الفيديو المميز</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Tab 3: Discord Announcer -->
+        <section class="tab-panel" id="tab-announce">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-bullhorn"></i> إرسال إشعار فوري لسيرفر الديسكورد</h2>
+            <p>انشر إشعاراً لفيديو جديد أو بث مباشر أو منشور إلى الروم المخصص في الديسكورد بضغطة زر واحدة!</p>
+          </div>
+
+          <form id="announcerForm" class="panel-card">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="announcePlatform">اختر المنصة</label>
+                <select id="announcePlatform" required>
+                  <option value="youtube">🔴 YouTube (فيديو جديد)</option>
+                  <option value="tiktok">⚫ TikTok (مقطع أو بث تيك توك)</option>
+                  <option value="instagram">🟣 Instagram (بوست أو ريل جديد)</option>
+                  <option value="facebook">🔵 Facebook (منشور فيسبوك)</option>
+                  <option value="general">📢 إشعار وتنبيه عام</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="announceTitle">عنوان الإشعار</label>
+                <input type="text" id="announceTitle" required placeholder="مثال: فيديو جديد نزل على القناة! 🔥">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="announceLink">رابط المنشور أو الفيديو</label>
+                <input type="url" id="announceLink" required placeholder="https://..." dir="ltr">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="announceMessage">وصف أو رسالة إضافية (اختياري)</label>
+                <textarea id="announceMessage" rows="3" placeholder="لا تنسوا تدعمونا باللايك والكومنت، رأيكم يهمني جداً..."></textarea>
+              </div>
+            </div>
+
+            <div class="panel-footer">
+              <button type="submit" class="primary-btn discord-send-btn" id="sendAnnounceBtn">
+                <i class="fa-brands fa-discord"></i>
+                <span>🚀 إرسال الإشعار إلى سيرفر الديسكورد الآن</span>
+              </button>
+            </div>
+          </form>
+
+          <div class="panel-card announcement-history-card">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> سجل آخر الإشعارات المرسلة</h3>
+            <div id="announcementsHistoryList" class="history-list">
+              <p class="empty-history">لا توجد إشعارات سابقة مسجلة.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 4: Analytics -->
+        <section class="tab-panel" id="tab-analytics">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-chart-line"></i> إحصائيات ونقرات الروابط</h2>
+            <p>تعرف على عدد الزيارات والنقرات على كل رابط من روابط السوشيال ميديا.</p>
+          </div>
+
+          <div class="stats-overview-grid">
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background: rgba(99, 102, 241, 0.15); color: #6366F1;">
+                <i class="fa-solid fa-eye"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">إجمالي زيارات الموقع</span>
+                <h3 class="stat-value" id="totalViewsVal">0</h3>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #10B981;">
+                <i class="fa-solid fa-arrow-pointer"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">إجمالي النقرات على الروابط</span>
+                <h3 class="stat-value" id="totalClicksVal">0</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <h3><i class="fa-solid fa-list-ol"></i> تفاصيل النقرات لكل منصة</h3>
+            <div id="platformClicksBreakdown" class="clicks-breakdown-list">
+              <!-- Dynamically populated breakdown -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 5: Discord Bot Settings -->
+        <section class="tab-panel" id="tab-bot">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-robot"></i> إعدادات وتكامل بوت الديسكورد</h2>
+            <p>إدارة اتصال البوت وتحديد قنوات إرسال التنبيهات.</p>
+          </div>
+
+          <div class="panel-card">
+            <div class="bot-status-hero" id="botHeroStatus">
+              <div class="bot-status-indicator">
+                <span class="status-beacon" id="adminBotBeacon"></span>
+                <div>
+                  <h3 id="adminBotTitle">جاري فحص حالة البوت...</h3>
+                  <p id="adminBotDetail">التحقق من الاتصال بالديسكورد...</p>
+                </div>
+              </div>
+              <button id="refreshBotStatusBtn" class="secondary-btn">
+                <i class="fa-solid fa-rotate"></i>
+                <span>تحديث الحالة</span>
+              </button>
+            </div>
+
+            <form id="botSettingsForm" style="margin-top: 24px;">
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label for="announceChannelId">معرف روم الإعلانات (Channel ID)</label>
+                  <input type="text" id="announceChannelId" placeholder="مثال: 123456789012345678" dir="ltr">
+                  <span class="input-helper">انسخ معرف الروم من الديسكورد (عبر تفعيل وضع المطور Developer Mode ثم النقر بزر الماوس الأيمن على الروم واختيار Copy Channel ID).</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="embedTitleInput">عنوان الـ Embed الافتراضي</label>
+                  <input type="text" id="embedTitleInput" placeholder="📢 إشعار جديد!">
+                </div>
+
+                <div class="form-group">
+                  <label for="footerTextInput">نص تذييل الرسالة (Footer)</label>
+                  <input type="text" id="footerTextInput" placeholder="Social Hub • جميع الحقوق محفوظة">
+                </div>
+              </div>
+
+              <div class="panel-footer">
+                <button type="submit" class="primary-btn">
+                  <i class="fa-solid fa-floppy-disk"></i>
+                  <span>حفظ إعدادات البوت</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="panel-card setup-instructions-card">
+            <h3><i class="fa-solid fa-circle-question"></i> كيف تشغل بوت الديسكورد لأول مرة؟</h3>
+            <ol class="instructions-steps">
+              <li>توجه إلى <strong><a href="https://discord.com/developers/applications" target="_blank" style="color: #5865F2;">Discord Developer Portal</a></strong> وأنشئ تطبيقاً جديداً (New Application).</li>
+              <li>انتقل لقسم <strong>Bot</strong> واضغط <strong>Reset Token</strong> لنسخ التوكن السري (Bot Token).</li>
+              <li>قم بتفعيل خيارات <strong>Privileged Gateway Intents</strong> (مثل Message Content Intent).</li>
+              <li>ضع التوكن في ملف <code>.env</code> تحت المتغير <code>DISCORD_TOKEN</code>.</li>
+              <li>ضع الـ Client ID تحت <code>CLIENT_ID</code>.</li>
+              <li>ادعُ البوت إلى سيرفرك بصلاحيات إرسال الرسائل والأوامر (Administrator أو Send Messages & Embed Links).</li>
+            </ol>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/admin.js"></script>
+</body>
+</html>
