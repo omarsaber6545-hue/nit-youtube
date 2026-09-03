@@ -25,19 +25,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- Main Stylesheet (with cache buster) -->
-  <link rel="stylesheet" href="css/style.css?v=4.0">
+  <link rel="stylesheet" href="css/style.css?v=4.5">
 
   <!-- Guaranteed Embedded Styles for Admin & Announcer Modals -->
   <style>
-    /* Modal Base Overlay */
+    /* Modal Base Overlay - Hidden by default */
     .modal-overlay {
+      display: none;
       position: fixed !important;
       inset: 0 !important;
-      background: rgba(0, 0, 0, 0.82) !important;
+      background: rgba(0, 0, 0, 0.85) !important;
       backdrop-filter: blur(12px) !important;
       -webkit-backdrop-filter: blur(12px) !important;
       z-index: 10000 !important;
-      display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       padding: 18px !important;
@@ -592,7 +592,7 @@
   </div>
 
   <!-- Admin Authentication Modal (Password: 1234) -->
-  <div class="modal-overlay" id="adminAuthModal" style="display: none;">
+  <div class="modal-overlay" id="adminAuthModal" style="display: none !important;">
     <div class="modal-card auth-card">
       <div class="modal-header">
         <h3><i class="fa-solid fa-lock"></i> تسجيل الدخول كمسؤول</h3>
@@ -615,7 +615,7 @@
   </div>
 
   <!-- Admin Publishing Modal -->
-  <div class="modal-overlay" id="adminPublishModal" style="display: none;">
+  <div class="modal-overlay" id="adminPublishModal" style="display: none !important;">
     <div class="modal-card publish-card">
       <div class="modal-header">
         <div class="modal-title-group">
@@ -691,7 +691,7 @@
   </div>
 
   <!-- Big Prominent Success Confirmation Modal -->
-  <div class="modal-overlay" id="publishSuccessModal" style="display: none; z-index: 10001;">
+  <div class="modal-overlay" id="publishSuccessModal" style="display: none !important; z-index: 10001;">
     <div class="modal-card auth-card" style="text-align: center; border-color: rgba(46, 213, 115, 0.6); box-shadow: 0 16px 60px rgba(0,0,0,0.9), 0 0 35px rgba(46, 213, 115, 0.3);">
       <div style="width: 75px; height: 75px; border-radius: 50%; background: rgba(46, 213, 115, 0.15); border: 2px solid #2ED573; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 2.2rem; color: #2ED573;">
         <i class="fa-solid fa-circle-check"></i>

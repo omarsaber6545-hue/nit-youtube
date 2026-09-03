@@ -262,6 +262,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const closePublishModal = document.getElementById("closePublishModal");
   const adminLogoutBtn = document.getElementById("adminLogoutBtn");
 
+  const publishSuccessModal = document.getElementById("publishSuccessModal");
+  const successModalTitle = document.getElementById("successModalTitle");
+  const closeSuccessModalBtn = document.getElementById("closeSuccessModalBtn");
+
+  if (closeSuccessModalBtn && publishSuccessModal) {
+    closeSuccessModalBtn.addEventListener("click", () => {
+      publishSuccessModal.style.setProperty("display", "none", "important");
+    });
+  }
+
+  if (publishSuccessModal) {
+    publishSuccessModal.addEventListener("click", (e) => {
+      if (e.target === publishSuccessModal) {
+        publishSuccessModal.style.setProperty("display", "none", "important");
+      }
+    });
+  }
+
   const publishAlertBox = document.getElementById("publishAlertBox");
 
   const announcerForm = document.getElementById("announcerForm");
@@ -294,13 +312,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function openAuthModal() {
     if (adminPinInput) adminPinInput.value = "";
     if (authErrorMsg) authErrorMsg.style.display = "none";
-    if (adminAuthModal) adminAuthModal.style.display = "flex";
+    if (adminAuthModal) adminAuthModal.style.setProperty("display", "flex", "important");
     if (adminPinInput) adminPinInput.focus();
   }
 
   function openPublishModal() {
-    if (adminAuthModal) adminAuthModal.style.display = "none";
-    if (adminPublishModal) adminPublishModal.style.display = "flex";
+    if (adminAuthModal) adminAuthModal.style.setProperty("display", "none", "important");
+    if (adminPublishModal) adminPublishModal.style.setProperty("display", "flex", "important");
 
     if (publishAlertBox) publishAlertBox.style.display = "none";
     renderAnnouncementsHistory();
@@ -309,13 +327,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Close modals
   if (closeAuthModal && adminAuthModal) {
     closeAuthModal.addEventListener("click", () => {
-      adminAuthModal.style.display = "none";
+      adminAuthModal.style.setProperty("display", "none", "important");
     });
   }
 
   if (closePublishModal && adminPublishModal) {
     closePublishModal.addEventListener("click", () => {
-      adminPublishModal.style.display = "none";
+      adminPublishModal.style.setProperty("display", "none", "important");
     });
   }
 
@@ -323,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (modal) {
       modal.addEventListener("click", (e) => {
         if (e.target === modal) {
-          modal.style.display = "none";
+          modal.style.setProperty("display", "none", "important");
         }
       });
     }
@@ -419,28 +437,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const data = await res.json();
 
-  const publishSuccessModal = document.getElementById("publishSuccessModal");
-  const successModalTitle = document.getElementById("successModalTitle");
-  const closeSuccessModalBtn = document.getElementById("closeSuccessModalBtn");
-
-  if (closeSuccessModalBtn && publishSuccessModal) {
-    closeSuccessModalBtn.addEventListener("click", () => {
-      publishSuccessModal.style.display = "none";
-    });
-  }
-
-  if (publishSuccessModal) {
-    publishSuccessModal.addEventListener("click", (e) => {
-      if (e.target === publishSuccessModal) {
-        publishSuccessModal.style.display = "none";
-      }
-    });
-  }
-
         if (res.ok && data.success) {
           // 1. Show Big Celebratory Success Modal
           if (successModalTitle) successModalTitle.textContent = title;
-          if (publishSuccessModal) publishSuccessModal.style.display = "flex";
+          if (publishSuccessModal) {
+            publishSuccessModal.style.setProperty("display", "flex", "important");
+          }
 
           // 2. Top-of-form Success Banner
           if (publishAlertBox) {
