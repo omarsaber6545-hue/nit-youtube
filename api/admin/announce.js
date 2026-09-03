@@ -73,14 +73,34 @@ module.exports = async (req, res) => {
     general: '📢 إشعار وتنبيه جديد'
   };
 
-  const platformIcons = {
-    youtube: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/512px-YouTube_full-color_icon_%282017%29.svg.png',
-    tiktok: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a9/TikTok_logo.svg/512px-TikTok_logo.svg.png',
-    instagram: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/512px-Instagram_icon.png',
-    facebook: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/512px-Facebook_Logo_%282019%29.png',
-    general: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Speaker_Icon.svg/512px-Speaker_Icon.svg.png'
-  };
-  const iconUrl = platformIcons[platform] || platformIcons.general;
+  // Load platform icon buffer
+  let iconBuffer = null;
+  const iconFilename = `${platform}.png`;
+  const iconLocalPaths = [
+    path.join(process.cwd(), `src/assets/icons/${iconFilename}`),
+    path.join(__dirname, `../../src/assets/icons/${iconFilename}`),
+    path.join(__dirname, `../../../src/assets/icons/${iconFilename}`),
+    path.join(__dirname, `../src/assets/icons/${iconFilename}`)
+  ];
+  for (const p of iconLocalPaths) {
+    if (fs.existsSync(p)) {
+      iconBuffer = fs.readFileSync(p);
+      break;
+    }
+  }
+
+  if (!iconBuffer) {
+    try {
+      const iconRes = await fetch(
+        `https://raw.githubusercontent.com/omarsaber6545-hue/nit-youtube/main/src/assets/icons/${iconFilename}`
+      );
+      if (iconRes.ok) iconBuffer = await iconRes.arrayBuffer();
+    } catch {}
+  }
+
+  const iconUrl = iconBuffer
+    ? 'attachment://icon.png'
+    : 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/youtube.png';
 
   const embed = {
     title: `✨ ${title.trim()}`,
@@ -106,7 +126,7 @@ module.exports = async (req, res) => {
     if (thumb) embed.image = { url: thumb };
   }
 
-  const payload = JSON.stringify({
+  const messagePayload = {
     content: '## 🔔 إشعار جديد للجميع | @everyone\n> 🚀 **تم نشر محتوى جديد ومميز! تفقد التفاصيل بالأسفل:**',
     embeds: [embed],
     components: [
@@ -122,34 +142,42 @@ module.exports = async (req, res) => {
         ]
       }
     ]
-  });
+  };
 
   try {
-    const discordRes = await new Promise((resolve, reject) => {
-      const dReq = https.request(
-        {
-          hostname: 'discord.com',
-          path: `/api/v10/channels/${CHANNEL_ID}/messages`,
-          method: 'POST',
-          headers: {
-            Authorization: `Bot ${TOKEN}`,
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(payload)
-          }
+    let discordResStatus = 0;
+    let discordResBody = '';
+
+    if (iconBuffer) {
+      const formData = new FormData();
+      formData.append('payload_json', JSON.stringify(messagePayload));
+      const blob = new Blob([iconBuffer], { type: 'image/png' });
+      formData.append('files[0]', blob, 'icon.png');
+
+      const dRes = await fetch(`https://discord.com/api/v10/channels/${CHANNEL_ID}/messages`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bot ${TOKEN}`
         },
-        (dRes) => {
-          let body = '';
-          dRes.on('data', (chunk) => (body += chunk));
-          dRes.on('end', () => resolve({ statusCode: dRes.statusCode, body }));
-        }
-      );
+        body: formData
+      });
+      discordResStatus = dRes.status;
+      discordResBody = await dRes.text();
+    } else {
+      const jsonPayload = JSON.stringify(messagePayload);
+      const dRes = await fetch(`https://discord.com/api/v10/channels/${CHANNEL_ID}/messages`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bot ${TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: jsonPayload
+      });
+      discordResStatus = dRes.status;
+      discordResBody = await dRes.text();
+    }
 
-      dReq.on('error', (err) => reject(err));
-      dReq.write(payload);
-      dReq.end();
-    });
-
-    if (discordRes.statusCode >= 200 && discordRes.statusCode < 300) {
+    if (discordResStatus >= 200 && discordResStatus < 300) {
       // Send Divider Line as a native file attachment (NO raw text URL displayed)
       try {
         let fileBuffer = null;
@@ -195,10 +223,10 @@ module.exports = async (req, res) => {
         message: 'تم إرسال الإشعار ونشره في سيرفر الديسكورد بنجاح! 🚀'
       });
     } else {
-      console.error('Discord API error:', discordRes.body);
-      return res.status(discordRes.statusCode || 500).json({
-        error: `فشل الإرسال للديسكورد (كود: ${discordRes.statusCode})`,
-        details: discordRes.body
+      console.error('Discord API error:', discordResBody);
+      return res.status(discordResStatus || 500).json({
+        error: `فشل الإرسال للديسكورد (كود: ${discordResStatus})`,
+        details: discordResBody
       });
     }
   } catch (err) {
