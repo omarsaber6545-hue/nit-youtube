@@ -92,6 +92,19 @@
   },
   "announcements": [
     {
+      "id": "1788454173234",
+      "timestamp": "2026-09-03T16:49:33.234Z",
+      "platform": "youtube",
+      "title": "????? ????? ????? ??????",
+      "link": "https://youtu.be/dQw4w9WgXcQ",
+      "message": "?? ????? ???? ????? ????? ?? ??? ??",
+      "channelName": "▶️・youtube-videos",
+      "channelId": "1543682822471163974",
+      "messageId": "1545113533044494449",
+      "dividerMessageId": "1545113537498845204",
+      "sentBy": "Web Dashboard"
+    },
+    {
       "id": "1788123320122",
       "timestamp": "2026-08-30T20:55:20.122Z",
       "platform": "tiktok",
