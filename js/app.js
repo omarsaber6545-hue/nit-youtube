@@ -32,14 +32,14 @@ const DEFAULT_DATA = {
     {
       id: "tiktok",
       name: "TikTok",
-      title: "حساب التيك توك",
-      username: "@CreatorTikTok",
-      url: "https://tiktok.com",
+      title: "حساب التيك توك الرسمي",
+      username: "@horizon_services252",
+      url: "https://www.tiktok.com/@horizon_services252",
       icon: "fa-brands fa-tiktok",
       color: "#00F2FE",
       gradient: "linear-gradient(135deg, #00F2FE, #FE0979)",
-      description: "مقاطع قصيرة، كواليس ويوميات ممتعة كل يوم!",
-      subscribers: "250K+"
+      description: "مقاطع قصيرة، شروحات وكواليس ممتعة كل يوم!",
+      subscribers: "Horizon Community"
     },
     {
       id: "instagram",
