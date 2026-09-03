@@ -79,19 +79,24 @@
   ],
   "services": [
     {
-      "title": "Discord & Telegram Bots",
+      "title": "Discord & Telegram Bots 🤖",
       "icon": "fa-solid fa-robot",
-      "desc": "تطوير وبرمجة بوتات ديسكورد وتليجرام مخصصة بأعلى معايير الأمان والسرعة."
+      "desc": "تطوير وبرمجة بوتات ديسكورد وتليجرام مخصصة بأعلى معايير الأداء والذكاء."
     },
     {
-      "title": "Websites & Applications",
+      "title": "Websites & Full Projects 🌐",
       "icon": "fa-solid fa-globe",
-      "desc": "تصميم وتطوير مواقع ويب حديثة، متجاوبة ومطابقة لأحدث المعايير العالمية."
+      "desc": "تصميم وتطوير مواقع ويب حديثة، أنظمة متكاملة ومشاريع برمجية احترافية."
     },
     {
-      "title": "Cloud VPS & Hosting",
+      "title": "Cloud VPS & Host Management 🖥️",
       "icon": "fa-solid fa-server",
-      "desc": "سيرفرات واستضافات سحابية عالية الأداء مع حماية DDoS وإدارة متكاملة."
+      "desc": "إدارة سيرفرات VPS سحابية، استضافات عالية الكفاءة مع حماية متقدمة."
+    },
+    {
+      "title": "Game Dev & NPM Packages 🎮",
+      "icon": "fa-solid fa-gamepad",
+      "desc": "تطوير ألعاب، بناء مكتبات وحزم برمجية مفتوحة المصدر وحلول مخصصة."
     }
   ]
 }
