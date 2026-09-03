@@ -251,10 +251,178 @@
       transform: translateY(-2px) !important;
     }
 
-    .discord-publish-btn:disabled {
-      opacity: 0.6 !important;
-      cursor: not-allowed !important;
-      transform: none !important;
+    /* Webhook Settings Box & Status */
+    .webhook-settings-box {
+      background: rgba(88, 101, 242, 0.08) !important;
+      border: 1px solid rgba(88, 101, 242, 0.28) !important;
+      border-radius: 14px !important;
+      padding: 16px !important;
+      margin-bottom: 20px !important;
+    }
+
+    .webhook-header {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      margin-bottom: 10px !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+    }
+
+    .webhook-header label {
+      font-size: 0.9rem !important;
+      font-weight: 800 !important;
+      color: #93A4F8 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    .webhook-status-pill {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      padding: 3px 10px !important;
+      border-radius: 999px !important;
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      color: #94A3B8 !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .webhook-status-pill.connected {
+      background: rgba(46, 213, 115, 0.15) !important;
+      border-color: rgba(46, 213, 115, 0.4) !important;
+      color: #2ED573 !important;
+    }
+
+    .webhook-status-pill.disconnected {
+      background: rgba(255, 71, 87, 0.12) !important;
+      border-color: rgba(255, 71, 87, 0.3) !important;
+      color: #FF4757 !important;
+    }
+
+    .status-indicator-dot {
+      width: 8px !important;
+      height: 8px !important;
+      border-radius: 50% !important;
+      background: #94A3B8 !important;
+      display: inline-block !important;
+    }
+
+    .webhook-status-pill.connected .status-indicator-dot {
+      background: #2ED573 !important;
+      box-shadow: 0 0 8px #2ED573 !important;
+    }
+
+    .webhook-status-pill.disconnected .status-indicator-dot {
+      background: #FF4757 !important;
+    }
+
+    .webhook-input-group {
+      display: flex !important;
+      gap: 8px !important;
+      margin-bottom: 8px !important;
+    }
+
+    .webhook-input-group input {
+      flex: 1 !important;
+      background: rgba(0, 0, 0, 0.45) !important;
+      border: 1px solid rgba(88, 101, 242, 0.35) !important;
+      border-radius: 10px !important;
+      padding: 10px 14px !important;
+      color: #fff !important;
+      font-size: 0.88rem !important;
+      font-family: inherit !important;
+    }
+
+    .test-webhook-btn {
+      background: rgba(88, 101, 242, 0.25) !important;
+      border: 1px solid rgba(88, 101, 242, 0.5) !important;
+      color: #C7D2FE !important;
+      border-radius: 10px !important;
+      padding: 0 16px !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-size: 0.88rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      white-space: nowrap !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .test-webhook-btn:hover {
+      background: #5865F2 !important;
+      color: #fff !important;
+      box-shadow: 0 0 14px rgba(88, 101, 242, 0.5) !important;
+    }
+
+    .webhook-feedback-msg {
+      font-size: 0.85rem !important;
+      font-weight: 700 !important;
+      padding: 8px 12px !important;
+      border-radius: 8px !important;
+      margin-bottom: 8px !important;
+      display: none;
+    }
+
+    .webhook-feedback-msg.success {
+      background: rgba(46, 213, 115, 0.15) !important;
+      border: 1px solid rgba(46, 213, 115, 0.4) !important;
+      color: #2ED573 !important;
+      display: block !important;
+    }
+
+    .webhook-feedback-msg.error {
+      background: rgba(255, 71, 87, 0.15) !important;
+      border: 1px solid rgba(255, 71, 87, 0.4) !important;
+      color: #FF4757 !important;
+      display: block !important;
+    }
+
+    .field-hint {
+      font-size: 0.8rem !important;
+      color: #94A3B8 !important;
+      line-height: 1.5 !important;
+      display: block !important;
+    }
+
+    /* Form Alert Box */
+    .publish-alert-box {
+      padding: 12px 16px !important;
+      border-radius: 10px !important;
+      font-size: 0.95rem !important;
+      font-weight: 700 !important;
+      margin-bottom: 14px !important;
+      display: none;
+      align-items: center !important;
+      gap: 10px !important;
+      line-height: 1.5 !important;
+    }
+
+    .publish-alert-box.success {
+      background: rgba(46, 213, 115, 0.2) !important;
+      border: 1px solid #2ED573 !important;
+      color: #2ED573 !important;
+      display: flex !important;
+      animation: alertSlideIn 0.3s ease !important;
+    }
+
+    .publish-alert-box.error {
+      background: rgba(255, 71, 87, 0.2) !important;
+      border: 1px solid #FF4757 !important;
+      color: #FF4757 !important;
+      display: flex !important;
+      animation: alertSlideIn 0.3s ease !important;
+    }
+
+    @keyframes alertSlideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -468,17 +636,27 @@
         <div class="webhook-settings-box">
           <div class="webhook-header">
             <label for="discordWebhookInput"><i class="fa-brands fa-discord"></i> رابط Webhook الديسكورد (قناة الإعلانات):</label>
-            <span class="saved-indicator" id="webhookSavedBadge" style="display: none;">تم الحفظ ✓</span>
+            <div class="webhook-status-pill disconnected" id="webhookStatusPill">
+              <span class="status-indicator-dot"></span>
+              <span id="webhookStatusText">غير متصل</span>
+            </div>
           </div>
-          <input type="url" id="discordWebhookInput" placeholder="https://discord.com/api/webhooks/..." dir="ltr">
-          <small class="field-hint">💡 يمكنك إنشاء رابط Webhook من إعدادات أي روم بالديسكورد (Integrations ➜ Webhooks)، ولصقه هنا لمرة واحدة وسيتم حفظه تلقائياً.</small>
+          <div class="webhook-input-group">
+            <input type="url" id="discordWebhookInput" placeholder="الصق رابط الـ Webhook هنا (https://discord.com/api/webhooks/...)" dir="ltr">
+            <button type="button" id="testWebhookBtn" class="test-webhook-btn">
+              <i class="fa-solid fa-bolt"></i>
+              <span>فحص وتجربة</span>
+            </button>
+          </div>
+          <div id="webhookFeedbackMsg" class="webhook-feedback-msg"></div>
+          <small class="field-hint">💡 <strong>طريقة جلب الرابط:</strong> من سيرفر الديسكورد ➜ إعدادات روم الإعلانات (Edit Channel) ➜ Integrations ➜ Webhooks ➜ اضغط Copy Webhook URL والصقه هنا لمرة واحدة فقط.</small>
         </div>
 
         <!-- Announcement Form -->
-        <form id="announcerForm" class="announcer-form">
+        <form id="announcerForm" class="announcer-form" novalidate>
           <div class="form-group-modal">
             <label for="announcePlatform"><i class="fa-solid fa-layer-group"></i> المنصة المستهدفة:</label>
-            <select id="announcePlatform" required>
+            <select id="announcePlatform">
               <option value="youtube">🔴 YouTube (فيديو جديد على القناة)</option>
               <option value="tiktok">⚫ TikTok (مقطع أو كواليس جديدة)</option>
               <option value="instagram">🟣 Instagram (بوست أو ريل إنستغرام)</option>
@@ -489,12 +667,12 @@
 
           <div class="form-group-modal">
             <label for="announceTitle"><i class="fa-solid fa-heading"></i> عنوان الإشعار:</label>
-            <input type="text" id="announceTitle" placeholder="مثال: فيديو جديد نزل على القناة! 🔥" required>
+            <input type="text" id="announceTitle" placeholder="مثال: فيديو جديد نزل على القناة! 🔥">
           </div>
 
           <div class="form-group-modal">
             <label for="announceLink"><i class="fa-solid fa-link"></i> رابط المنشور أو الفيديو:</label>
-            <input type="url" id="announceLink" placeholder="https://..." dir="ltr" required>
+            <input type="url" id="announceLink" placeholder="https://..." dir="ltr">
           </div>
 
           <div class="form-group-modal">
@@ -510,6 +688,9 @@
             <label for="announceMessage"><i class="fa-solid fa-comment-dots"></i> رسالة أو وصف إضافي (اختياري):</label>
             <textarea id="announceMessage" rows="3" placeholder="اكتب رسالة موجهة لمتابعي الديسكورد..."></textarea>
           </div>
+
+          <!-- Alert Box for Publishing Feedback -->
+          <div id="publishAlertBox" class="publish-alert-box"></div>
 
           <button type="submit" class="discord-publish-btn" id="sendAnnouncementBtn">
             <i class="fa-brands fa-discord"></i>

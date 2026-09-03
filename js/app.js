@@ -263,7 +263,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminLogoutBtn = document.getElementById("adminLogoutBtn");
 
   const discordWebhookInput = document.getElementById("discordWebhookInput");
-  const webhookSavedBadge = document.getElementById("webhookSavedBadge");
+  const webhookStatusPill = document.getElementById("webhookStatusPill");
+  const webhookStatusText = document.getElementById("webhookStatusText");
+  const testWebhookBtn = document.getElementById("testWebhookBtn");
+  const webhookFeedbackMsg = document.getElementById("webhookFeedbackMsg");
+  const publishAlertBox = document.getElementById("publishAlertBox");
+
   const announcerForm = document.getElementById("announcerForm");
   const announcePlatform = document.getElementById("announcePlatform");
   const announceTitle = document.getElementById("announceTitle");
@@ -279,6 +284,19 @@ document.addEventListener("DOMContentLoaded", () => {
       sessionStorage.getItem("admin_authenticated") === "1234" ||
       localStorage.getItem("admin_authenticated") === "1234"
     );
+  }
+
+  // Update Webhook Status Badge
+  function updateWebhookStatus(url) {
+    if (!webhookStatusPill || !webhookStatusText) return;
+    const cleanUrl = (url || "").trim();
+    if (cleanUrl.startsWith("https://discord.com/api/webhooks/")) {
+      webhookStatusPill.className = "webhook-status-pill connected";
+      webhookStatusText.textContent = "متصل وجاهز للنشر ✓";
+    } else {
+      webhookStatusPill.className = "webhook-status-pill disconnected";
+      webhookStatusText.textContent = "غير متصل (أدخل الرابط)";
+    }
   }
 
   // Open Admin Flow
@@ -307,10 +325,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedWebhook = localStorage.getItem("discord_webhook_url") || "";
     if (discordWebhookInput) {
       discordWebhookInput.value = savedWebhook;
-      if (savedWebhook && webhookSavedBadge) {
-        webhookSavedBadge.style.display = "inline";
-      }
+      updateWebhookStatus(savedWebhook);
     }
+
+    if (webhookFeedbackMsg) webhookFeedbackMsg.style.display = "none";
+    if (publishAlertBox) publishAlertBox.style.display = "none";
 
     renderAnnouncementsHistory();
   }
@@ -368,13 +387,76 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Save Webhook on input change
+  // Save Webhook on input change & update status
   if (discordWebhookInput) {
     discordWebhookInput.addEventListener("input", () => {
       const val = discordWebhookInput.value.trim();
       localStorage.setItem("discord_webhook_url", val);
-      if (webhookSavedBadge) {
-        webhookSavedBadge.style.display = val ? "inline" : "none";
+      updateWebhookStatus(val);
+      if (webhookFeedbackMsg) webhookFeedbackMsg.style.display = "none";
+    });
+  }
+
+  // Test Webhook Connection Button
+  if (testWebhookBtn) {
+    testWebhookBtn.addEventListener("click", async () => {
+      const webhookUrl = (discordWebhookInput ? discordWebhookInput.value.trim() : "") ||
+                         localStorage.getItem("discord_webhook_url");
+
+      if (!webhookUrl || !webhookUrl.startsWith("https://discord.com/api/webhooks/")) {
+        if (webhookFeedbackMsg) {
+          webhookFeedbackMsg.className = "webhook-feedback-msg error";
+          webhookFeedbackMsg.textContent = "⚠️ يرجى لصق رابط Webhook ديسكورد صحيح أولاً!";
+        }
+        if (discordWebhookInput) discordWebhookInput.focus();
+        return;
+      }
+
+      const originalBtnText = testWebhookBtn.innerHTML;
+      testWebhookBtn.disabled = true;
+      testWebhookBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الفحص...</span>';
+
+      try {
+        const testPayload = {
+          username: "Horizon Services • فحص الاتصال",
+          avatar_url: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png",
+          embeds: [{
+            title: "✅ تم تأكيد اتصال الـ Webhook بنجاح!",
+            description: "🎉 **موقعك متصل الآن بالديسكورد بنجاح!**\n> يمكنك الآن نشر الفيديوهات والإعلانات بضغطة زر مباشرة.",
+            color: 3066993,
+            footer: { text: "Horizon Services • فحص الاتصال" },
+            timestamp: new Date().toISOString()
+          }]
+        };
+
+        const res = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(testPayload)
+        });
+
+        if (!res.ok) {
+          throw new Error(`كود الاستجابة: ${res.status}`);
+        }
+
+        // Success
+        localStorage.setItem("discord_webhook_url", webhookUrl);
+        updateWebhookStatus(webhookUrl);
+        if (webhookFeedbackMsg) {
+          webhookFeedbackMsg.className = "webhook-feedback-msg success";
+          webhookFeedbackMsg.textContent = "🎉 تم الاتصال بنجاح! تم إرسال رسالة تجريبية في روم الديسكورد، تفقد الروم الآن.";
+        }
+        showToast("✅ تم تأكيد الاتصال وإرسال رسالة تجريبية للديسكورد!");
+      } catch (err) {
+        console.error("Test webhook error:", err);
+        updateWebhookStatus("");
+        if (webhookFeedbackMsg) {
+          webhookFeedbackMsg.className = "webhook-feedback-msg error";
+          webhookFeedbackMsg.textContent = `❌ فشل الاتصال بالويب هوك: ${err.message} (تأكد من نسخ الرابط كاملاً وصلاحيات الروم)`;
+        }
+      } finally {
+        testWebhookBtn.disabled = false;
+        testWebhookBtn.innerHTML = originalBtnText;
       }
     });
   }
@@ -393,24 +475,53 @@ document.addEventListener("DOMContentLoaded", () => {
     announcerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      if (publishAlertBox) publishAlertBox.style.display = "none";
+
       const webhookUrl = (discordWebhookInput ? discordWebhookInput.value.trim() : "") ||
                          localStorage.getItem("discord_webhook_url");
 
+      // Validation 1: Webhook URL
       if (!webhookUrl || !webhookUrl.startsWith("https://discord.com/api/webhooks/")) {
-        alert("⚠️ يرجى إدخال رابط Webhook صالح من قناة الإعلانات بالديسكورد أولاً!\n(مثال: https://discord.com/api/webhooks/...)");
-        if (discordWebhookInput) discordWebhookInput.focus();
+        if (publishAlertBox) {
+          publishAlertBox.className = "publish-alert-box error";
+          publishAlertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> <span>⚠️ يرجى إدخال رابط Webhook الديسكورد في الحقل بالأعلى أولاً!</span>';
+        }
+        if (discordWebhookInput) {
+          discordWebhookInput.focus();
+          discordWebhookInput.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
         return;
       }
 
-      // Automatically remember the webhook in local storage
+      // Automatically remember the webhook
       localStorage.setItem("discord_webhook_url", webhookUrl);
-      if (webhookSavedBadge) webhookSavedBadge.style.display = "inline";
+      updateWebhookStatus(webhookUrl);
 
-      const platform = announcePlatform.value;
-      const title = announceTitle.value.trim();
-      const link = announceLink.value.trim();
-      const ping = announcePing.value;
-      const message = announceMessage.value.trim();
+      const platform = announcePlatform ? announcePlatform.value : "youtube";
+      const title = announceTitle ? announceTitle.value.trim() : "";
+      const link = announceLink ? announceLink.value.trim() : "";
+      const ping = announcePing ? announcePing.value : "everyone";
+      const message = announceMessage ? announceMessage.value.trim() : "";
+
+      // Validation 2: Title
+      if (!title) {
+        if (publishAlertBox) {
+          publishAlertBox.className = "publish-alert-box error";
+          publishAlertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> <span>⚠️ يرجى كتابة عنوان للإشعار قبل النشر!</span>';
+        }
+        if (announceTitle) announceTitle.focus();
+        return;
+      }
+
+      // Validation 3: Link
+      if (!link) {
+        if (publishAlertBox) {
+          publishAlertBox.className = "publish-alert-box error";
+          publishAlertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> <span>⚠️ يرجى وضع رابط الفيديو أو المنشور!</span>';
+        }
+        if (announceLink) announceLink.focus();
+        return;
+      }
 
       sendAnnouncementBtn.disabled = true;
       sendAnnouncementBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري النشر في الديسكورد عبر الويب هوك...</span>';
@@ -471,14 +582,22 @@ document.addEventListener("DOMContentLoaded", () => {
           timestamp: new Date().toISOString()
         });
 
+        if (publishAlertBox) {
+          publishAlertBox.className = "publish-alert-box success";
+          publishAlertBox.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>🎉 تم نشر الإشعار في سيرفر الديسكورد بنجاح! تفقد الروم الآن 🚀</span>';
+        }
+
         showToast("🚀 تم نشر الإشعار في سيرفر الديسكورد بنجاح!");
-        announceTitle.value = "";
-        announceLink.value = "";
-        announceMessage.value = "";
+        if (announceTitle) announceTitle.value = "";
+        if (announceLink) announceLink.value = "";
+        if (announceMessage) announceMessage.value = "";
         renderAnnouncementsHistory();
       } catch (err) {
         console.error("Announcement Webhook error:", err);
-        alert(`❌ تعذر إرسال الإشعار إلى الويب هوك:\n${err.message}\nيرجى التأكد من صحة رابط الويب هوك الخاص بروم الإعلانات.`);
+        if (publishAlertBox) {
+          publishAlertBox.className = "publish-alert-box error";
+          publishAlertBox.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>❌ تعذر إرسال الإشعار: ${err.message} (تأكد من صحة رابط الـ Webhook)</span>`;
+        }
       } finally {
         sendAnnouncementBtn.disabled = false;
         sendAnnouncementBtn.innerHTML = '<i class="fa-brands fa-discord"></i> <span>🚀 إرسال ونشر الإشعار في سيرفر الديسكورد الآن</span>';
