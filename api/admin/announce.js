@@ -1,4 +1,6 @@
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 // Token fallback (encoded to prevent raw leak blocks)
 const DEFAULT_TOKEN = Buffer.from(
@@ -148,29 +150,45 @@ module.exports = async (req, res) => {
     });
 
     if (discordRes.statusCode >= 200 && discordRes.statusCode < 300) {
-      // Send Divider Line right below the announcement
-      const dividerPayload = JSON.stringify({
-        content: 'https://raw.githubusercontent.com/omarsaber6545-hue/nit-youtube/main/src/assets/divider.png'
-      });
+      // Send Divider Line as a native file attachment (NO raw text URL displayed)
+      try {
+        let fileBuffer = null;
+        const localPaths = [
+          path.join(process.cwd(), 'src/assets/divider.png'),
+          path.join(__dirname, '../../src/assets/divider.png'),
+          path.join(__dirname, '../../../src/assets/divider.png'),
+          path.join(__dirname, '../src/assets/divider.png')
+        ];
+        for (const p of localPaths) {
+          if (fs.existsSync(p)) {
+            fileBuffer = fs.readFileSync(p);
+            break;
+          }
+        }
 
-      await new Promise((resolve) => {
-        const divReq = https.request(
-          {
-            hostname: 'discord.com',
-            path: `/api/v10/channels/${CHANNEL_ID}/messages`,
+        if (!fileBuffer) {
+          const rawRes = await fetch('https://raw.githubusercontent.com/omarsaber6545-hue/nit-youtube/main/src/assets/divider.png');
+          if (rawRes.ok) {
+            fileBuffer = await rawRes.arrayBuffer();
+          }
+        }
+
+        if (fileBuffer) {
+          const blob = new Blob([fileBuffer], { type: 'image/png' });
+          const formData = new FormData();
+          formData.append('files[0]', blob, 'divider.png');
+
+          await fetch(`https://discord.com/api/v10/channels/${CHANNEL_ID}/messages`, {
             method: 'POST',
             headers: {
-              Authorization: `Bot ${TOKEN}`,
-              'Content-Type': 'application/json',
-              'Content-Length': Buffer.byteLength(dividerPayload)
-            }
-          },
-          () => resolve()
-        );
-        divReq.on('error', () => resolve());
-        divReq.write(dividerPayload);
-        divReq.end();
-      });
+              Authorization: `Bot ${TOKEN}`
+            },
+            body: formData
+          });
+        }
+      } catch (divErr) {
+        console.error('Divider send error:', divErr);
+      }
 
       return res.status(200).json({
         success: true,
