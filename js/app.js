@@ -268,6 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (closeSuccessModalBtn && publishSuccessModal) {
     closeSuccessModalBtn.addEventListener("click", () => {
+      publishSuccessModal.classList.remove("open");
       publishSuccessModal.style.setProperty("display", "none", "important");
     });
   }
@@ -275,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (publishSuccessModal) {
     publishSuccessModal.addEventListener("click", (e) => {
       if (e.target === publishSuccessModal) {
+        publishSuccessModal.classList.remove("open");
         publishSuccessModal.style.setProperty("display", "none", "important");
       }
     });
@@ -312,13 +314,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function openAuthModal() {
     if (adminPinInput) adminPinInput.value = "";
     if (authErrorMsg) authErrorMsg.style.display = "none";
-    if (adminAuthModal) adminAuthModal.style.setProperty("display", "flex", "important");
+    if (adminAuthModal) {
+      adminAuthModal.classList.add("open");
+      adminAuthModal.style.setProperty("display", "flex", "important");
+    }
     if (adminPinInput) adminPinInput.focus();
   }
 
   function openPublishModal() {
-    if (adminAuthModal) adminAuthModal.style.setProperty("display", "none", "important");
-    if (adminPublishModal) adminPublishModal.style.setProperty("display", "flex", "important");
+    if (adminAuthModal) {
+      adminAuthModal.classList.remove("open");
+      adminAuthModal.style.setProperty("display", "none", "important");
+    }
+    if (adminPublishModal) {
+      adminPublishModal.classList.add("open");
+      adminPublishModal.style.setProperty("display", "flex", "important");
+    }
 
     if (publishAlertBox) publishAlertBox.style.display = "none";
     renderAnnouncementsHistory();
@@ -327,12 +338,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Close modals
   if (closeAuthModal && adminAuthModal) {
     closeAuthModal.addEventListener("click", () => {
+      adminAuthModal.classList.remove("open");
       adminAuthModal.style.setProperty("display", "none", "important");
     });
   }
 
   if (closePublishModal && adminPublishModal) {
     closePublishModal.addEventListener("click", () => {
+      adminPublishModal.classList.remove("open");
       adminPublishModal.style.setProperty("display", "none", "important");
     });
   }
@@ -341,6 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (modal) {
       modal.addEventListener("click", (e) => {
         if (e.target === modal) {
+          modal.classList.remove("open");
           modal.style.setProperty("display", "none", "important");
         }
       });
@@ -441,6 +455,7 @@ document.addEventListener("DOMContentLoaded", () => {
           // 1. Show Big Celebratory Success Modal
           if (successModalTitle) successModalTitle.textContent = title;
           if (publishSuccessModal) {
+            publishSuccessModal.classList.add("open");
             publishSuccessModal.style.setProperty("display", "flex", "important");
           }
 

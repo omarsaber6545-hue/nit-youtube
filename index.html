@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- Main Stylesheet (with cache buster) -->
-  <link rel="stylesheet" href="css/style.css?v=4.5">
+  <link rel="stylesheet" href="css/style.css?v=5.0">
 
   <!-- Guaranteed Embedded Styles for Admin & Announcer Modals -->
   <style>
@@ -41,6 +41,9 @@
       align-items: center !important;
       justify-content: center !important;
       padding: 18px !important;
+    }
+    .modal-overlay.open {
+      display: flex !important;
     }
 
     /* Modal Cards */
@@ -592,7 +595,7 @@
   </div>
 
   <!-- Admin Authentication Modal (Password: 1234) -->
-  <div class="modal-overlay" id="adminAuthModal" style="display: none !important;">
+  <div class="modal-overlay" id="adminAuthModal">
     <div class="modal-card auth-card">
       <div class="modal-header">
         <h3><i class="fa-solid fa-lock"></i> تسجيل الدخول كمسؤول</h3>
@@ -615,7 +618,7 @@
   </div>
 
   <!-- Admin Publishing Modal -->
-  <div class="modal-overlay" id="adminPublishModal" style="display: none !important;">
+  <div class="modal-overlay" id="adminPublishModal">
     <div class="modal-card publish-card">
       <div class="modal-header">
         <div class="modal-title-group">
@@ -691,7 +694,7 @@
   </div>
 
   <!-- Big Prominent Success Confirmation Modal -->
-  <div class="modal-overlay" id="publishSuccessModal" style="display: none !important; z-index: 10001;">
+  <div class="modal-overlay" id="publishSuccessModal">
     <div class="modal-card auth-card" style="text-align: center; border-color: rgba(46, 213, 115, 0.6); box-shadow: 0 16px 60px rgba(0,0,0,0.9), 0 0 35px rgba(46, 213, 115, 0.3);">
       <div style="width: 75px; height: 75px; border-radius: 50%; background: rgba(46, 213, 115, 0.15); border: 2px solid #2ED573; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 2.2rem; color: #2ED573;">
         <i class="fa-solid fa-circle-check"></i>
@@ -727,14 +730,16 @@
       var pubModal = document.getElementById("adminPublishModal");
       var isAuth = (sessionStorage.getItem("admin_authenticated") === "1234" || localStorage.getItem("admin_authenticated") === "1234");
       if (isAuth) {
-        if (pubModal) pubModal.style.display = "flex";
+        if (authModal) { authModal.classList.remove("open"); authModal.style.display = "none"; }
+        if (pubModal) { pubModal.classList.add("open"); pubModal.style.display = "flex"; }
       } else {
-        if (authModal) authModal.style.display = "flex";
+        if (pubModal) { pubModal.classList.remove("open"); pubModal.style.display = "none"; }
+        if (authModal) { authModal.classList.add("open"); authModal.style.display = "flex"; }
         var pinInp = document.getElementById("adminPinInput");
         if (pinInp) { pinInp.value = ""; pinInp.focus(); }
       }
     };
   </script>
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=5.0"></script>
 </body>
 </html>
