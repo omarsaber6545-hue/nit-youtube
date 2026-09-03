@@ -177,7 +177,7 @@ class BotService {
         `🔗 **الرابط:** [انقر هنا للمشاهدة والتفاعل مباشرة](${link})`
       )
       .setFooter({
-        text: `Horizon Services • نظام النشر الآلي المعتمد`,
+        text: `Horizon Services`,
         iconURL: currentIcon
       })
       .setTimestamp();
@@ -191,12 +191,16 @@ class BotService {
       new ButtonBuilder()
         .setLabel(currentPlat.action)
         .setURL(link)
+        .setStyle(ButtonStyle.Link),
+      new ButtonBuilder()
+        .setLabel('سيرفر الديسكورد 💬')
+        .setURL('https://discord.gg/swj6DHy2a')
         .setStyle(ButtonStyle.Link)
     );
 
     const dividerPath = path.join(__dirname, '../assets/divider.png');
 
-    const announcementContent = `## 🔔 إشعار جديد للجميع | @everyone\n> 🚀 **تم نشر محتوى جديد ومميز! تفقد التفاصيل بالأسفل:**`;
+    const announcementContent = `## 🔔 إشعار جديد للجميع | @everyone`;
 
     const sentMessage = await channel.send({
       content: announcementContent,

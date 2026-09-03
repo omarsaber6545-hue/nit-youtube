@@ -44,14 +44,14 @@ const DEFAULT_DATA = {
     {
       id: "instagram",
       name: "Instagram",
-      title: "حساب الإنستغرام",
-      username: "@CreatorInsta",
-      url: "https://instagram.com",
+      title: "حساب الإنستغرام الرسمي",
+      username: "@horizon_services251",
+      url: "https://www.instagram.com/horizon_services251/",
       icon: "fa-brands fa-instagram",
       color: "#E1306C",
       gradient: "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
-      description: "صور يومية، ستوريات وتفاعل مباشر معكم 📸",
-      subscribers: "80K+"
+      description: "صور يومية، ستوريات وتفاعل مباشر مع المتابعين 📸",
+      subscribers: "Horizon Community"
     },
     {
       id: "facebook",

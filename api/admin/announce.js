@@ -115,7 +115,7 @@ module.exports = async (req, res) => {
     },
     description: `${message ? `>>> 💬 **رسالة الإدارة:**\n${message.trim()}\n\n` : ''}🔗 **الرابط:** [انقر هنا للمشاهدة والتفاعل مباشرة](${cleanLink})`,
     footer: {
-      text: 'Horizon Services • نظام النشر الآلي المعتمد',
+      text: 'Horizon Services',
       icon_url: iconUrl
     },
     timestamp: new Date().toISOString()
@@ -127,7 +127,7 @@ module.exports = async (req, res) => {
   }
 
   const messagePayload = {
-    content: '## 🔔 إشعار جديد للجميع | @everyone\n> 🚀 **تم نشر محتوى جديد ومميز! تفقد التفاصيل بالأسفل:**',
+    content: '## 🔔 إشعار جديد للجميع | @everyone',
     embeds: [embed],
     components: [
       {
