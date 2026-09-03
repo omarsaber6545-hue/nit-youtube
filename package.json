@@ -1,0 +1,18 @@
+{
+  "name": "horizon-services-hub",
+  "version": "1.0.0",
+  "description": "Horizon Services — Official Social Media Hub & Discord Community Portal",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "horizon-services",
+    "social-hub",
+    "discord",
+    "vercel"
+  ],
+  "author": "Horizon Services",
+  "license": "ISC"
+}

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Horizon Services | بوابة السوشيال ميديا والبوت</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="البوابة الرسمية لـ Horizon Services وصانع المحتوى عمر الشامي. تابع حساباتنا على يوتيوب، تيك توك، انستغرام وانضم لمجتمع الديسكورد.">
+  <meta name="keywords" content="Horizon Services, Discord Bot, YouTube, TikTok, Instagram, Facebook, Omar Creator, البرمجة">
+  <meta property="og:title" content="Horizon Services | Official Hub">
+  <meta property="og:description" content="البوابة الرسمية لجميع حسابات السوشيال ميديا، خدمات البرمجة وبوت الديسكورد.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#E50914">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/avatar.png">
+
+  <!-- Google Fonts: Cairo & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Ambient Animated Background Glows -->
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+  <div class="bg-glow glow-3"></div>
+
+  <!-- Top Header Navigation -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <div class="bot-badge" id="botStatusBadge">
+        <span class="pulse-dot"></span>
+        <span id="botStatusText">Horizon Master • متصل 24/7 🟢</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn" id="sharePageBtn" title="مشاركة الصفحة">
+        <i class="fa-solid fa-share-nodes"></i>
+        <span>مشاركة</span>
+      </button>
+      <a href="https://discord.gg/hz-s" target="_blank" rel="noopener noreferrer" class="nav-btn discord-nav-btn" title="انضمام لسيرفر الديسكورد">
+        <i class="fa-brands fa-discord"></i>
+        <span>سيرفر الديسكورد</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="hub-container">
+    
+    <!-- Profile Card Section -->
+    <section class="profile-card" id="profileSection">
+      <div class="banner-container">
+        <img src="assets/avatar.png" alt="Horizon Services Banner" id="profileBanner" class="profile-banner">
+        <div class="banner-overlay"></div>
+      </div>
+
+      <div class="avatar-wrapper">
+        <img src="assets/avatar.png" alt="Avatar" id="profileAvatar" class="profile-avatar">
+        <div class="verified-badge" title="حساب موثق ومحمى">
+          <i class="fa-solid fa-check"></i>
+        </div>
+      </div>
+
+      <div class="profile-info">
+        <h1 class="creator-name" id="creatorName">عمر الشامي - Omar Creator</h1>
+        <span class="creator-handle" id="creatorHandle">@omar_official • Horizon Services</span>
+        <p class="creator-bio" id="creatorBio">صانع محتوى ومطور أنظمة برمجية في Horizon Services. نقدم حلول الديسكورد، الويب واستضافات VPS السحابية 🚀</p>
+        
+        <div class="profile-tags" id="profileTags">
+          <span class="tag"><i class="fa-solid fa-location-dot"></i> <span id="creatorLocation">مصر / العالم العربي</span></span>
+          <span class="tag"><i class="fa-solid fa-envelope"></i> <span id="creatorEmail">contact@horizonservices.com</span></span>
+          <span class="tag"><i class="fa-solid fa-shield-halved"></i> <span>Horizon Certified</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Discord Bot & Community Showcase Banner -->
+    <section class="discord-community-card" id="discordCommunityCard">
+      <div class="discord-card-content">
+        <div class="discord-icon-wrap">
+          <i class="fa-brands fa-discord"></i>
+        </div>
+        <div class="discord-text">
+          <div class="badge-row">
+            <span class="status-pill">🤖 Horizon Master Bot</span>
+            <span class="status-pill-online">🟢 24/7 Active</span>
+          </div>
+          <h3>انضم إلى مجتمع Horizon Services!</h3>
+          <p>تفاعل مع المطورين، استمتع بنظام الصوتيات 24/7، التقييمات، واطلب خدماتك البرمجية بكل سهولة.</p>
+        </div>
+      </div>
+      <a href="https://discord.gg/hz-s" id="joinDiscordBtn" target="_blank" rel="noopener noreferrer" class="join-discord-action">
+        <span>دخول السيرفر الآن</span>
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+    </section>
+
+    <!-- Social Links Grid / Cards -->
+    <section class="socials-section">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <i class="fa-solid fa-link"></i> المنصات وحسابات التواصل الرسمية
+        </h2>
+        <span class="section-subtitle">اختر المنصة وانقر للانتقال والمتابعة فوراً</span>
+      </div>
+
+      <div class="social-cards-grid" id="socialCardsGrid">
+        <!-- Dynamically rendered via JS -->
+      </div>
+    </section>
+
+    <!-- Featured YouTube Video Section -->
+    <section class="featured-video-section" id="featuredVideoSection">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <i class="fa-brands fa-youtube" style="color: #ff0000;"></i> أحدث فيديو وشرح على يوتيوب
+        </h2>
+        <span class="section-subtitle">شاهد الفيديو مباشرة أو انتقل إلى القناة الرسمية</span>
+      </div>
+      <div class="video-container">
+        <div class="iframe-wrapper">
+          <iframe id="ytVideoIframe" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Featured Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Horizon Services Showcase -->
+    <section class="services-section">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <i class="fa-solid fa-cubes"></i> خدمات ومشاريع Horizon Services
+        </h2>
+        <span class="section-subtitle">حلول تقنية متكاملة بأعلى معايير السرعة والاستقرار</span>
+      </div>
+
+      <div class="services-grid" id="servicesGrid">
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-robot"></i></div>
+          <h3>Discord & Telegram Bots</h3>
+          <p>برمجة بوتات احترافية متقدمة، ربط قواعد البيانات، وأنظمة حماية وتأسيس كاملة.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-globe"></i></div>
+          <h3>Websites & Full Projects</h3>
+          <p>تصميم وتطوير مواقع وتطبيقات ويب عصرية، سريعة ومتجاوبة بأحدث التقنيات.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-server"></i></div>
+          <h3>Cloud VPS & Hosting</h3>
+          <p>سيرفرات سحابية قوية ومحمية بنسبة 99.9% لتشغيل البوتات والمشاريع 24/7 دون انقطاع.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Share & QR Code Modal -->
+  <div class="modal-overlay" id="shareModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-share-nodes"></i> مشاركة الرابط</h3>
+        <button class="modal-close-btn" id="closeShareModal" aria-label="إغلاق">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">امسح رمز الـ QR أو انسخ الرابط لمشاركته مع أصدقائك وجمهورك:</p>
+        
+        <div class="qr-container">
+          <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://discord.gg/hz-s" alt="QR Code">
+        </div>
+
+        <div class="copy-box">
+          <input type="text" id="shareUrlInput" readonly value="https://discord.gg/hz-s">
+          <button id="copyUrlBtn" class="copy-btn">
+            <i class="fa-regular fa-copy"></i>
+            <span>نسخ الرابط</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer class="hub-footer">
+    <p>تم التطوير بواسطة <strong>Horizon Services</strong> • جميع الحقوق محفوظة &copy; <span id="currentYear">2026</span></p>
+    <p class="footer-sub">Discord.js v14 Enterprise System • Hosted on Vercel</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/app.js"></script>
+</body>
+</html>
