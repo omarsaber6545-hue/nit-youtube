@@ -397,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Test Webhook Connection Button
+  // Test Webhook Connection Button (Checks connection via GET without sending spam to channel)
   if (testWebhookBtn) {
     testWebhookBtn.addEventListener("click", async () => {
       const webhookUrl = (discordWebhookInput ? discordWebhookInput.value.trim() : "") ||
@@ -414,45 +414,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const originalBtnText = testWebhookBtn.innerHTML;
       testWebhookBtn.disabled = true;
-      testWebhookBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الفحص...</span>';
+      testWebhookBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التحقق...</span>';
 
       try {
-        const testPayload = {
-          username: "Horizon Services • فحص الاتصال",
-          avatar_url: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png",
-          embeds: [{
-            title: "✅ تم تأكيد اتصال الـ Webhook بنجاح!",
-            description: "🎉 **موقعك متصل الآن بالديسكورد بنجاح!**\n> يمكنك الآن نشر الفيديوهات والإعلانات بضغطة زر مباشرة.",
-            color: 3066993,
-            footer: { text: "Horizon Services • فحص الاتصال" },
-            timestamp: new Date().toISOString()
-          }]
-        };
-
+        // Query Discord for Webhook details via GET (does NOT post any message to the room)
         const res = await fetch(webhookUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(testPayload)
+          method: "GET"
         });
 
         if (!res.ok) {
-          throw new Error(`كود الاستجابة: ${res.status}`);
+          throw new Error(`كود الاستجابة: ${res.status} (الرابط غير صحيح أو محذوف من الديسكورد)`);
         }
 
-        // Success
+        const data = await res.json();
+        const hookName = data.name || "Discord Webhook";
+
+        // Success: valid webhook confirmed
         localStorage.setItem("discord_webhook_url", webhookUrl);
         updateWebhookStatus(webhookUrl);
         if (webhookFeedbackMsg) {
           webhookFeedbackMsg.className = "webhook-feedback-msg success";
-          webhookFeedbackMsg.textContent = "🎉 تم الاتصال بنجاح! تم إرسال رسالة تجريبية في روم الديسكورد، تفقد الروم الآن.";
+          webhookFeedbackMsg.textContent = `🟢 تم فحص وتأكيد الاتصال بنجاح! اسم الويبهوك: (${hookName}) ✓`;
         }
-        showToast("✅ تم تأكيد الاتصال وإرسال رسالة تجريبية للديسكورد!");
+        showToast(`✅ متصل بنجاح بروم الديسكورد (${hookName})!`);
       } catch (err) {
         console.error("Test webhook error:", err);
         updateWebhookStatus("");
         if (webhookFeedbackMsg) {
           webhookFeedbackMsg.className = "webhook-feedback-msg error";
-          webhookFeedbackMsg.textContent = `❌ فشل الاتصال بالويب هوك: ${err.message} (تأكد من نسخ الرابط كاملاً وصلاحيات الروم)`;
+          webhookFeedbackMsg.textContent = `❌ فشل الاتصال بالويب هوك: ${err.message}`;
         }
       } finally {
         testWebhookBtn.disabled = false;
@@ -499,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const platform = announcePlatform ? announcePlatform.value : "youtube";
       const title = announceTitle ? announceTitle.value.trim() : "";
-      const link = announceLink ? announceLink.value.trim() : "";
+      const rawLink = announceLink ? announceLink.value.trim() : "";
       const ping = announcePing ? announcePing.value : "everyone";
       const message = announceMessage ? announceMessage.value.trim() : "";
 
@@ -514,7 +504,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Validation 3: Link
-      if (!link) {
+      if (!rawLink) {
         if (publishAlertBox) {
           publishAlertBox.className = "publish-alert-box error";
           publishAlertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> <span>⚠️ يرجى وضع رابط الفيديو أو المنشور!</span>';
@@ -523,17 +513,23 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      sendAnnouncementBtn.disabled = true;
-      sendAnnouncementBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري النشر في الديسكورد عبر الويب هوك...</span>';
+      // Normalize Link (Ensure valid absolute URL with http/https)
+      let cleanLink = rawLink;
+      if (!cleanLink.startsWith("http://") && !cleanLink.startsWith("https://")) {
+        cleanLink = "https://" + cleanLink;
+      }
 
-      const platformMeta = {
-        youtube: { name: "🔴 YouTube | فيديو جديد", color: 16711680, icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png" },
-        tiktok: { name: "⚫ TikTok | مقطع جديد", color: 62206, icon: "https://cdn-icons-png.flaticon.com/512/3046/3046121.png" },
-        instagram: { name: "🟣 Instagram | منشور جديد", color: 14758000, icon: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png" },
-        facebook: { name: "🔵 Facebook | منشور جديد", color: 1603570, icon: "https://cdn-icons-png.flaticon.com/512/5968/5968764.png" },
-        general: { name: "📢 إشعار وتنبيه جديد", color: 15024404, icon: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png" }
+      sendAnnouncementBtn.disabled = true;
+      sendAnnouncementBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري النشر في الديسكورد...</span>';
+
+      const platformColors = {
+        youtube: 16711680,   // #FF0000
+        tiktok: 62206,       // #00F2FE
+        instagram: 14758000, // #E1306C
+        facebook: 1603570,   // #1877F2
+        general: 15024404    // #E50914
       };
-      const meta = platformMeta[platform] || platformMeta.general;
+      const embedColor = platformColors[platform] || platformColors.general;
 
       let content = "";
       if (ping === "everyone") {
@@ -544,16 +540,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const embed = {
         title: `✨ ${title}`,
-        url: link,
-        color: meta.color,
-        author: { name: `Horizon Services • ${meta.name}`, icon_url: meta.icon },
-        description: `${message ? `>>> 💬 **رسالة الإدارة:**\n${message}\n\n` : ""}🔗 **الرابط:** [انقر هنا للمشاهدة والتفاعل مباشرة](${link})`,
-        footer: { text: "Horizon Services • نظام النشر بالويب هوك", icon_url: meta.icon },
+        url: cleanLink,
+        color: embedColor,
+        description: `${message ? `>>> 💬 **رسالة الإدارة:**\n${message}\n\n` : ""}🔗 **الرابط:** [انقر هنا للمشاهدة والتفاعل مباشرة](${cleanLink})`,
+        footer: { text: "Horizon Services • نظام النشر بالويب هوك" },
         timestamp: new Date().toISOString()
       };
 
       if (platform === "youtube") {
-        const ytThumb = getYouTubeThumbnail(link);
+        const ytThumb = getYouTubeThumbnail(cleanLink);
         if (ytThumb) embed.image = { url: ytThumb };
       }
 
@@ -563,21 +558,27 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             username: "Horizon Services • Announcer",
-            avatar_url: meta.icon,
             content: content || undefined,
             embeds: [embed]
           })
         });
 
         if (!response.ok) {
-          throw new Error(`كود الاستجابة من ديسكورد: ${response.status}`);
+          let errorDetails = "";
+          try {
+            const errJson = await response.json();
+            errorDetails = errJson.message || JSON.stringify(errJson);
+          } catch {
+            errorDetails = `كود الاستجابة: ${response.status}`;
+          }
+          throw new Error(errorDetails);
         }
 
         saveAnnouncementToHistory({
           id: Date.now().toString(),
           platform,
           title,
-          link,
+          link: cleanLink,
           message,
           timestamp: new Date().toISOString()
         });
@@ -596,7 +597,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Announcement Webhook error:", err);
         if (publishAlertBox) {
           publishAlertBox.className = "publish-alert-box error";
-          publishAlertBox.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>❌ تعذر إرسال الإشعار: ${err.message} (تأكد من صحة رابط الـ Webhook)</span>`;
+          publishAlertBox.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>❌ تعذر إرسال الإشعار: ${err.message}</span>`;
         }
       } finally {
         sendAnnouncementBtn.disabled = false;
