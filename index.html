@@ -24,8 +24,239 @@
   <!-- FontAwesome 6 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Main Stylesheet (with cache buster) -->
+  <link rel="stylesheet" href="css/style.css?v=3.2">
+
+  <!-- Guaranteed Embedded Styles for Admin & Announcer Modals -->
+  <style>
+    /* Modal Base Overlay */
+    .modal-overlay {
+      position: fixed !important;
+      inset: 0 !important;
+      background: rgba(0, 0, 0, 0.82) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      z-index: 10000 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 18px !important;
+    }
+
+    /* Modal Cards */
+    .modal-card {
+      background: #0E1118 !important;
+      border: 1px solid rgba(229, 9, 20, 0.4) !important;
+      border-radius: 18px !important;
+      width: 100% !important;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(229, 9, 20, 0.25) !important;
+      color: #fff !important;
+      font-family: 'Cairo', sans-serif !important;
+      box-sizing: border-box !important;
+    }
+
+    .auth-card {
+      max-width: 440px !important;
+      padding: 26px !important;
+    }
+
+    .publish-card {
+      max-width: 640px !important;
+      padding: 24px !important;
+      max-height: 90vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .modal-header {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      margin-bottom: 18px !important;
+      padding-bottom: 12px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .modal-header h3 {
+      font-size: 1.25rem !important;
+      font-weight: 800 !important;
+      margin: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      color: #fff !important;
+    }
+
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: none !important;
+      color: #8892B0 !important;
+      width: 34px !important;
+      height: 34px !important;
+      border-radius: 50% !important;
+      font-size: 1.4rem !important;
+      line-height: 1 !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.25) !important;
+      color: #FF4757 !important;
+    }
+
+    .modal-desc {
+      color: #8892B0 !important;
+      font-size: 0.95rem !important;
+      margin-bottom: 16px !important;
+      line-height: 1.6 !important;
+    }
+
+    /* Auth PIN Input */
+    .admin-pin-field {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 2px solid rgba(255, 255, 255, 0.15) !important;
+      border-radius: 12px !important;
+      padding: 12px 18px !important;
+      color: #fff !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-size: 1.2rem !important;
+      font-weight: 700 !important;
+      text-align: center !important;
+      letter-spacing: 4px !important;
+      margin-bottom: 14px !important;
+      transition: all 0.25s ease !important;
+    }
+
+    .admin-pin-field:focus {
+      outline: none !important;
+      border-color: #E50914 !important;
+      background: rgba(229, 9, 20, 0.08) !important;
+      box-shadow: 0 0 16px rgba(229, 9, 20, 0.4) !important;
+    }
+
+    /* Primary Block Button */
+    .primary-btn-block {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 13px !important;
+      background: linear-gradient(135deg, #E50914 0%, #B81D24 100%) !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 12px !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-weight: 800 !important;
+      font-size: 1.05rem !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 10px !important;
+      box-shadow: 0 4px 18px rgba(229, 9, 20, 0.4) !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .primary-btn-block:hover {
+      background: linear-gradient(135deg, #FF1A27 0%, #D4141E 100%) !important;
+      box-shadow: 0 6px 24px rgba(229, 9, 20, 0.6) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    .auth-error-msg {
+      color: #FF4757 !important;
+      font-size: 0.9rem !important;
+      font-weight: 700 !important;
+      text-align: center !important;
+      margin-bottom: 12px !important;
+    }
+
+    /* Announcer Modal Elements */
+    .form-group-modal {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 6px !important;
+      margin-bottom: 14px !important;
+      text-align: right !important;
+    }
+
+    .form-group-modal label {
+      font-size: 0.88rem !important;
+      font-weight: 700 !important;
+      color: #E2E8F0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    .form-group-modal input,
+    .form-group-modal select,
+    .form-group-modal textarea {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      border-radius: 10px !important;
+      padding: 10px 14px !important;
+      color: #fff !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-size: 0.92rem !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .form-group-modal select option {
+      background: #0E1118 !important;
+      color: #fff !important;
+    }
+
+    .form-group-modal input:focus,
+    .form-group-modal select:focus,
+    .form-group-modal textarea:focus {
+      outline: none !important;
+      border-color: #E50914 !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 0 12px rgba(229, 9, 20, 0.3) !important;
+    }
+
+    /* Discord Publish Button */
+    .discord-publish-btn {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 14px !important;
+      background: #5865F2 !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 12px !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-weight: 800 !important;
+      font-size: 1.05rem !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 10px !important;
+      margin-top: 10px !important;
+      margin-bottom: 20px !important;
+      box-shadow: 0 4px 18px rgba(88, 101, 242, 0.45) !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .discord-publish-btn:hover {
+      background: #4752C4 !important;
+      box-shadow: 0 6px 24px rgba(88, 101, 242, 0.65) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    .discord-publish-btn:disabled {
+      opacity: 0.6 !important;
+      cursor: not-allowed !important;
+      transform: none !important;
+    }
+  </style>
 </head>
 <body>
   <!-- Ambient Animated Background Glows -->
@@ -203,9 +434,9 @@
         <p class="modal-desc">أدخل رمز المرور السري للوصول إلى لوحة نشر الإشعارات:</p>
         <form id="adminAuthForm">
           <div class="form-group-modal">
-            <input type="password" id="adminPinInput" placeholder="أدخل رمز المرور (1234)" required autocomplete="current-password">
+            <input type="password" id="adminPinInput" class="admin-pin-field" placeholder="رمز المرور (1234)" required autocomplete="current-password" autofocus>
           </div>
-          <div id="authErrorMsg" class="auth-error-msg" style="display: none;">❌ رمز المرور غير صحيح!</div>
+          <div id="authErrorMsg" class="auth-error-msg" style="display: none;">❌ رمز المرور غير صحيح! (الرمز هو 1234)</div>
           <button type="submit" class="primary-btn-block">
             <i class="fa-solid fa-right-to-bracket"></i>
             <span>تأكيد الدخول</span>
