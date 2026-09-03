@@ -54,18 +54,6 @@ const DEFAULT_DATA = {
       subscribers: "Horizon Community"
     },
     {
-      id: "facebook",
-      name: "Facebook",
-      title: "صفحة الفيسبوك الرسمية",
-      username: "CreatorPage",
-      url: "https://facebook.com",
-      icon: "fa-brands fa-facebook",
-      color: "#1877F2",
-      gradient: "linear-gradient(135deg, #1877F2, #0d53ad)",
-      description: "أحدث الأخبار، البثوث المباشرة والمنشورات الحصرية.",
-      subscribers: "50K+"
-    },
-    {
       id: "discord",
       name: "Discord",
       title: "مجتمع وسيرفر الديسكورد",
