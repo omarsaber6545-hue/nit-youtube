@@ -20,13 +20,13 @@ const DEFAULT_DATA = {
       id: "youtube",
       name: "YouTube",
       title: "قناة اليوتيوب الرسمية",
-      username: "@CreatorYT",
-      url: "https://youtube.com",
+      username: "@horizonservices-dis",
+      url: "https://www.youtube.com/@horizonservices-dis",
       icon: "fa-brands fa-youtube",
       color: "#FF0000",
       gradient: "linear-gradient(135deg, #FF0000, #b30000)",
-      description: "فيديوهات وشروحات وتحديات تقنية جديدة أسبوعياً!",
-      subscribers: "500K+",
+      description: "فيديوهات وشروحات وتحديثات برمجية حصرية من Horizon Services!",
+      subscribers: "Horizon Community",
       featuredVideoId: "dQw4w9WgXcQ"
     },
     {
