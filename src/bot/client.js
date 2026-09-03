@@ -132,11 +132,11 @@ class BotService {
     };
 
     const platformIcons = {
-      youtube: 'https://cdn-icons-png.flaticon.com/512/1384/1384060.png',
-      tiktok: 'https://cdn-icons-png.flaticon.com/512/3046/3046121.png',
-      instagram: 'https://cdn-icons-png.flaticon.com/512/2111/2111463.png',
-      facebook: 'https://cdn-icons-png.flaticon.com/512/5968/5968764.png',
-      general: 'https://cdn-icons-png.flaticon.com/512/3602/3602145.png'
+      youtube: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/512px-YouTube_full-color_icon_%282017%29.svg.png',
+      tiktok: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a9/TikTok_logo.svg/512px-TikTok_logo.svg.png',
+      instagram: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/512px-Instagram_icon.png',
+      facebook: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/512px-Facebook_Logo_%282019%29.png',
+      general: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Speaker_Icon.svg/512px-Speaker_Icon.svg.png'
     };
 
     const platformLabels = {
@@ -148,6 +148,7 @@ class BotService {
     };
 
     const currentPlat = platformLabels[platform] || platformLabels.general;
+    const currentIcon = platformIcons[platform] || platformIcons.general;
 
     // Helper to extract YouTube video thumbnail
     function getYouTubeThumbnail(url) {
@@ -160,26 +161,24 @@ class BotService {
 
     const { ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require('discord.js');
 
-    const authorIcon = (profile.avatar && profile.avatar.startsWith('http'))
-      ? profile.avatar
-      : (this.client.user.displayAvatarURL() || 'https://cdn-icons-png.flaticon.com/512/3602/3602145.png');
+    const authorIcon = currentIcon;
 
     const embed = new EmbedBuilder()
       .setColor(colors[platform] || '#5865F2')
       .setAuthor({
-        name: `${profile.name} • إشعار جديد 🚀`,
+        name: `Horizon Services • ${currentPlat.name}`,
         iconURL: authorIcon
       })
       .setTitle(`✨ ${title}`)
       .setURL(link)
-      .setThumbnail(platformIcons[platform] || platformIcons.general)
+      .setThumbnail(currentIcon)
       .setDescription(
-        `${message ? `>>> 💬 **رسالة صانع المحتوى:**\n${message}\n\n` : ''}` +
+        `${message ? `>>> 💬 **رسالة الإدارة:**\n${message}\n\n` : ''}` +
         `🔗 **الرابط:** [انقر هنا للمشاهدة والتفاعل مباشرة](${link})`
       )
       .setFooter({
-        text: `Social Hub • إشعار تلقائي فوري`,
-        iconURL: 'https://cdn-icons-png.flaticon.com/512/3602/3602145.png'
+        text: `Horizon Services • نظام النشر الآلي المعتمد`,
+        iconURL: currentIcon
       })
       .setTimestamp();
 

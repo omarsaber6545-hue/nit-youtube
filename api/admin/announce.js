@@ -71,16 +71,30 @@ module.exports = async (req, res) => {
     general: '📢 إشعار وتنبيه جديد'
   };
 
+  const platformIcons = {
+    youtube: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/512px-YouTube_full-color_icon_%282017%29.svg.png',
+    tiktok: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a9/TikTok_logo.svg/512px-TikTok_logo.svg.png',
+    instagram: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/512px-Instagram_icon.png',
+    facebook: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/512px-Facebook_Logo_%282019%29.png',
+    general: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Speaker_Icon.svg/512px-Speaker_Icon.svg.png'
+  };
+  const iconUrl = platformIcons[platform] || platformIcons.general;
+
   const embed = {
     title: `✨ ${title.trim()}`,
     url: cleanLink,
     color: platformColors[platform] || platformColors.general,
     author: {
-      name: `Horizon Services • ${platformLabels[platform] || platformLabels.general}`
+      name: `Horizon Services • ${platformLabels[platform] || platformLabels.general}`,
+      icon_url: iconUrl
+    },
+    thumbnail: {
+      url: iconUrl
     },
     description: `${message ? `>>> 💬 **رسالة الإدارة:**\n${message.trim()}\n\n` : ''}🔗 **الرابط:** [انقر هنا للمشاهدة والتفاعل مباشرة](${cleanLink})`,
     footer: {
-      text: 'Horizon Services • نظام النشر الآلي'
+      text: 'Horizon Services • نظام النشر الآلي المعتمد',
+      icon_url: iconUrl
     },
     timestamp: new Date().toISOString()
   };
@@ -134,6 +148,30 @@ module.exports = async (req, res) => {
     });
 
     if (discordRes.statusCode >= 200 && discordRes.statusCode < 300) {
+      // Send Divider Line right below the announcement
+      const dividerPayload = JSON.stringify({
+        content: 'https://raw.githubusercontent.com/omarsaber6545-hue/nit-youtube/main/src/assets/divider.png'
+      });
+
+      await new Promise((resolve) => {
+        const divReq = https.request(
+          {
+            hostname: 'discord.com',
+            path: `/api/v10/channels/${CHANNEL_ID}/messages`,
+            method: 'POST',
+            headers: {
+              Authorization: `Bot ${TOKEN}`,
+              'Content-Type': 'application/json',
+              'Content-Length': Buffer.byteLength(dividerPayload)
+            }
+          },
+          () => resolve()
+        );
+        divReq.on('error', () => resolve());
+        divReq.write(dividerPayload);
+        divReq.end();
+      });
+
       return res.status(200).json({
         success: true,
         message: 'تم إرسال الإشعار ونشره في سيرفر الديسكورد بنجاح! 🚀'
