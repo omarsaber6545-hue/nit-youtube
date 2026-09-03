@@ -25,35 +25,66 @@ async function getMediaImage(platform, url) {
     }
   }
 
-  // 2. Instagram post / reel / tv preview image
+  // 2. Instagram post / reel / tv preview image (Full Uncropped Image)
   if (platform === 'instagram' || url.includes('instagram.com')) {
     try {
-      const res = await fetch(url, {
-        headers: {
-          'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
-          'Accept': 'text/html,application/xhtml+xml,application/xml'
-        },
-        signal: AbortSignal.timeout(6000)
-      });
-      if (res.ok) {
-        const html = await res.text();
-        const match =
-          html.match(/<meta property="og:image" content="([^"]+)"/i) ||
-          html.match(/<meta name="twitter:image" content="([^"]+)"/i);
-        if (match && match[1]) {
-          const rawUrl = match[1].replace(/&amp;/g, '&');
-          try {
-            const imgRes = await fetch(rawUrl, { signal: AbortSignal.timeout(6000) });
-            if (imgRes.ok) {
-              const buffer = await imgRes.arrayBuffer();
-              return { buffer, filename: 'post_image.jpg' };
+      const shortcodeMatch = url.match(/\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/);
+      let targetImgUrl = null;
+
+      // Method 1: Fetch embed captioned page to get the original 100% uncropped full image (e.g. 1536x864)
+      if (shortcodeMatch && shortcodeMatch[1]) {
+        try {
+          const embedUrl = `https://www.instagram.com/p/${shortcodeMatch[1]}/embed/captioned/`;
+          const embedRes = await fetch(embedUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            },
+            signal: AbortSignal.timeout(6000)
+          });
+          if (embedRes.ok) {
+            const embedHtml = await embedRes.text();
+            const embedMatch =
+              embedHtml.match(/class="EmbeddedMediaImage" src="([^"]+)"/) ||
+              embedHtml.match(/<img class="[^"]*EmbeddedMediaImage[^"]*"[^>]*src="([^"]+)"/);
+            if (embedMatch && embedMatch[1]) {
+              targetImgUrl = embedMatch[1].replace(/&amp;/g, '&');
             }
-          } catch {}
-          return { url: rawUrl };
+          }
+        } catch {}
+      }
+
+      // Method 2: Fallback to OpenGraph og:image
+      if (!targetImgUrl) {
+        const res = await fetch(url, {
+          headers: {
+            'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+            'Accept': 'text/html,application/xhtml+xml,application/xml'
+          },
+          signal: AbortSignal.timeout(6000)
+        });
+        if (res.ok) {
+          const html = await res.text();
+          const match =
+            html.match(/<meta property="og:image" content="([^"]+)"/i) ||
+            html.match(/<meta name="twitter:image" content="([^"]+)"/i);
+          if (match && match[1]) {
+            targetImgUrl = match[1].replace(/&amp;/g, '&');
+          }
         }
       }
+
+      if (targetImgUrl) {
+        try {
+          const imgRes = await fetch(targetImgUrl, { signal: AbortSignal.timeout(8000) });
+          if (imgRes.ok) {
+            const buffer = await imgRes.arrayBuffer();
+            return { buffer, filename: 'post_image.jpg' };
+          }
+        } catch {}
+        return { url: targetImgUrl };
+      }
     } catch (err) {
-      console.error('Instagram image fetch error:', err.message);
+      console.error('Instagram uncropped image fetch error:', err.message);
     }
   }
 

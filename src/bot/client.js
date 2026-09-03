@@ -159,6 +159,21 @@ class BotService {
       }
       if (plat === 'instagram' || url.includes('instagram.com')) {
         try {
+          const shortcodeMatch = url.match(/\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/);
+          if (shortcodeMatch && shortcodeMatch[1]) {
+            try {
+              const embedUrl = `https://www.instagram.com/p/${shortcodeMatch[1]}/embed/captioned/`;
+              const embedRes = await fetch(embedUrl, {
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+                signal: AbortSignal.timeout(6000)
+              });
+              if (embedRes.ok) {
+                const embedHtml = await embedRes.text();
+                const embedMatch = embedHtml.match(/class="EmbeddedMediaImage" src="([^"]+)"/) || embedHtml.match(/<img class="[^"]*EmbeddedMediaImage[^"]*"[^>]*src="([^"]+)"/);
+                if (embedMatch && embedMatch[1]) return embedMatch[1].replace(/&amp;/g, '&');
+              }
+            } catch {}
+          }
           const res = await fetch(url, {
             headers: {
               'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
