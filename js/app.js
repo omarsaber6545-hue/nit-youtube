@@ -12,7 +12,7 @@ const DEFAULT_DATA = {
     banner: "assets/avatar.png",
     verified: true,
     location: "مصر / العالم العربي",
-    email: "contact@horizonservices.com",
+    email: "horizonservices2510@gmail.com",
     discordServer: "https://discord.gg/swj6DHy2a"
   },
   socials: [
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (profile.avatar && profileAvatar) profileAvatar.src = profile.avatar;
     if (profile.banner && profileBanner) profileBanner.src = profile.banner;
     if (creatorLocation) creatorLocation.textContent = profile.location || "مصر / العالم العربي";
-    if (creatorEmail) creatorEmail.textContent = profile.email || "contact@horizonservices.com";
+    if (creatorEmail) creatorEmail.textContent = profile.email || "horizonservices2510@gmail.com";
   }
 
   function renderSocials(socials) {
