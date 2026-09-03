@@ -11,6 +11,7 @@ const DEFAULT_TOKEN = Buffer.from(
 const TOKEN = process.env.DISCORD_TOKEN || DEFAULT_TOKEN;
 const CHANNEL_ID = process.env.ANNOUNCE_CHANNEL_ID || '1543682822471163974';
 const ADMIN_PIN = process.env.ADMIN_PIN || '1234';
+const YOUTUBE_ROLE_ID = process.env.YOUTUBE_ROLE_ID || '1543682732486426776';
 
 async function getMediaImage(platform, url) {
   if (!url) return null;
@@ -232,9 +233,17 @@ module.exports = async (req, res) => {
     }
   }
 
+  const mentionHeader = platform === 'youtube'
+    ? `## 🔔 فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`
+    : '## 🔔 إشعار جديد للجميع | @everyone';
+
   const messagePayload = {
-    content: '## 🔔 إشعار جديد للجميع | @everyone',
+    content: mentionHeader,
     embeds: [embed],
+    allowed_mentions: {
+      parse: ['everyone', 'users'],
+      roles: [YOUTUBE_ROLE_ID]
+    },
     components: [
       {
         type: 1,

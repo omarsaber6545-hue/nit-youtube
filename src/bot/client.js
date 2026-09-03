@@ -243,12 +243,19 @@ class BotService {
 
     const dividerPath = path.join(__dirname, '../assets/divider.png');
 
-    const announcementContent = `## 🔔 إشعار جديد للجميع | @everyone`;
+    const YOUTUBE_ROLE_ID = process.env.YOUTUBE_ROLE_ID || '1543682732486426776';
+    const announcementContent = platform === 'youtube'
+      ? `## 🔔 فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`
+      : `## 🔔 إشعار جديد للجميع | @everyone`;
 
     const sentMessage = await channel.send({
       content: announcementContent,
       embeds: [embed],
-      components: [row]
+      components: [row],
+      allowedMentions: {
+        parse: ['everyone', 'users'],
+        roles: [YOUTUBE_ROLE_ID]
+      }
     });
 
     let dividerMessage = null;
