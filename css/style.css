@@ -845,3 +845,333 @@ body {
     display: none;
   }
 }
+
+/* ==========================================================================
+   ADMIN & ANNOUNCER MODAL STYLES
+   ========================================================================== */
+.admin-nav-btn {
+  background: rgba(229, 9, 20, 0.15);
+  border-color: rgba(229, 9, 20, 0.35);
+  color: #FF4757;
+}
+
+.admin-nav-btn:hover {
+  background: #E50914;
+  color: #fff;
+  border-color: #E50914;
+  box-shadow: 0 0 16px rgba(229, 9, 20, 0.5);
+}
+
+.auth-card {
+  max-width: 380px;
+}
+
+.publish-card {
+  max-width: 620px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-scrollable {
+  overflow-y: auto;
+  padding-right: 6px;
+  max-height: calc(90vh - 100px);
+}
+
+.modal-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+.modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-badge-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(229, 9, 20, 0.2);
+  color: #FF4757;
+  border: 1px solid rgba(229, 9, 20, 0.4);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.logout-pill-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition-fast);
+}
+
+.logout-pill-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.form-group-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  text-align: right;
+}
+
+.form-group-modal label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group-modal input,
+.form-group-modal select,
+.form-group-modal textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: var(--transition-fast);
+}
+
+.form-group-modal select option {
+  background: #0E1118;
+  color: #fff;
+}
+
+.form-group-modal input:focus,
+.form-group-modal select:focus,
+.form-group-modal textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 12px rgba(229, 9, 20, 0.3);
+}
+
+.auth-error-msg {
+  color: #EF4444;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.primary-btn-block {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-fast);
+}
+
+.primary-btn-block:hover {
+  background: var(--accent-red);
+  box-shadow: 0 0 16px rgba(229, 9, 20, 0.5);
+}
+
+.webhook-settings-box {
+  background: rgba(88, 101, 242, 0.08);
+  border: 1px solid rgba(88, 101, 242, 0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.webhook-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.webhook-header label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #7289da;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.saved-indicator {
+  font-size: 0.75rem;
+  color: #2ED573;
+  font-weight: 700;
+}
+
+.webhook-settings-box input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(88, 101, 242, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 0.84rem;
+  margin-bottom: 6px;
+}
+
+.field-hint {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.discord-publish-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--discord-color);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(88, 101, 242, 0.35);
+  transition: var(--transition-normal);
+}
+
+.discord-publish-btn:hover {
+  background: #4752C4;
+  box-shadow: 0 6px 22px rgba(88, 101, 242, 0.55);
+  transform: translateY(-2px);
+}
+
+.discord-publish-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.announcement-history-section {
+  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
+}
+
+.announcement-history-section h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.history-item-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.history-item-meta {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.history-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-action-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.history-action-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.history-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+}
+
+.empty-history {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 12px;
+}
+

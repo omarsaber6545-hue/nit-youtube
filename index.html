@@ -50,6 +50,10 @@
         <i class="fa-brands fa-discord"></i>
         <span>سيرفر الديسكورد</span>
       </a>
+      <button class="nav-btn admin-nav-btn" id="openAdminBtn" title="لوحة النشر والإدارة">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>الأدمن</span>
+      </button>
     </div>
   </header>
 
@@ -184,6 +188,112 @@
             <span>نسخ الرابط</span>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Authentication Modal (Password: 1234) -->
+  <div class="modal-overlay" id="adminAuthModal" style="display: none;">
+    <div class="modal-card auth-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-lock"></i> تسجيل الدخول كمسؤول</h3>
+        <button class="modal-close-btn" id="closeAuthModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">أدخل رمز المرور السري للوصول إلى لوحة نشر الإشعارات:</p>
+        <form id="adminAuthForm">
+          <div class="form-group-modal">
+            <input type="password" id="adminPinInput" placeholder="أدخل رمز المرور (1234)" required autocomplete="current-password">
+          </div>
+          <div id="authErrorMsg" class="auth-error-msg" style="display: none;">❌ رمز المرور غير صحيح!</div>
+          <button type="submit" class="primary-btn-block">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>تأكيد الدخول</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Publishing Modal -->
+  <div class="modal-overlay" id="adminPublishModal" style="display: none;">
+    <div class="modal-card publish-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3><i class="fa-solid fa-bullhorn" style="color: #E50914;"></i> مرسل إشعارات الديسكورد</h3>
+          <span class="admin-badge-pill">Admin Mode (1234)</span>
+        </div>
+        <div class="modal-header-actions">
+          <button class="logout-pill-btn" id="adminLogoutBtn" title="تسجيل الخروج">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>خروج</span>
+          </button>
+          <button class="modal-close-btn" id="closePublishModal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body modal-scrollable">
+        
+        <!-- Discord Webhook Settings Box -->
+        <div class="webhook-settings-box">
+          <div class="webhook-header">
+            <label for="discordWebhookInput"><i class="fa-brands fa-discord"></i> رابط Webhook الديسكورد (قناة الإعلانات):</label>
+            <span class="saved-indicator" id="webhookSavedBadge" style="display: none;">تم الحفظ ✓</span>
+          </div>
+          <input type="url" id="discordWebhookInput" placeholder="https://discord.com/api/webhooks/..." dir="ltr">
+          <small class="field-hint">💡 يمكنك إنشاء رابط Webhook من إعدادات أي روم بالديسكورد (Integrations ➜ Webhooks)، ولصقه هنا لمرة واحدة وسيتم حفظه تلقائياً.</small>
+        </div>
+
+        <!-- Announcement Form -->
+        <form id="announcerForm" class="announcer-form">
+          <div class="form-group-modal">
+            <label for="announcePlatform"><i class="fa-solid fa-layer-group"></i> المنصة المستهدفة:</label>
+            <select id="announcePlatform" required>
+              <option value="youtube">🔴 YouTube (فيديو جديد على القناة)</option>
+              <option value="tiktok">⚫ TikTok (مقطع أو كواليس جديدة)</option>
+              <option value="instagram">🟣 Instagram (بوست أو ريل إنستغرام)</option>
+              <option value="facebook">🔵 Facebook (منشور صفحة الفيسبوك)</option>
+              <option value="general">📢 إشعار وتنبيه عام</option>
+            </select>
+          </div>
+
+          <div class="form-group-modal">
+            <label for="announceTitle"><i class="fa-solid fa-heading"></i> عنوان الإشعار:</label>
+            <input type="text" id="announceTitle" placeholder="مثال: فيديو جديد نزل على القناة! 🔥" required>
+          </div>
+
+          <div class="form-group-modal">
+            <label for="announceLink"><i class="fa-solid fa-link"></i> رابط المنشور أو الفيديو:</label>
+            <input type="url" id="announceLink" placeholder="https://..." dir="ltr" required>
+          </div>
+
+          <div class="form-group-modal">
+            <label for="announcePing"><i class="fa-solid fa-bell"></i> التنبيه والمنشن:</label>
+            <select id="announcePing">
+              <option value="everyone">🔔 تنبيه الجميع (@everyone)</option>
+              <option value="youtube_role">▶️ رتبة تنبيهات اليوتيوب فقط</option>
+              <option value="none">🔕 بدون منشن (إشعار صامت)</option>
+            </select>
+          </div>
+
+          <div class="form-group-modal">
+            <label for="announceMessage"><i class="fa-solid fa-comment-dots"></i> رسالة أو وصف إضافي (اختياري):</label>
+            <textarea id="announceMessage" rows="3" placeholder="اكتب رسالة موجهة لمتابعي الديسكورد..."></textarea>
+          </div>
+
+          <button type="submit" class="discord-publish-btn" id="sendAnnouncementBtn">
+            <i class="fa-brands fa-discord"></i>
+            <span>🚀 إرسال ونشر الإشعار في سيرفر الديسكورد الآن</span>
+          </button>
+        </form>
+
+        <!-- History Section -->
+        <div class="announcement-history-section">
+          <h4><i class="fa-solid fa-clock-rotate-left"></i> سجل آخر الإشعارات المنشورة</h4>
+          <div id="announcementsHistoryList" class="history-list">
+            <p class="empty-history">لا توجد إشعارات مسجلة حتى الآن.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
