@@ -50,7 +50,7 @@
         <i class="fa-brands fa-discord"></i>
         <span>سيرفر الديسكورد</span>
       </a>
-      <button class="nav-btn admin-nav-btn" id="openAdminBtn" title="لوحة النشر والإدارة">
+      <button class="nav-btn admin-nav-btn" id="openAdminBtn" onclick="window.openAdminModal()" title="لوحة النشر والإدارة">
         <i class="fa-solid fa-shield-halved"></i>
         <span>الأدمن</span>
       </button>
@@ -308,6 +308,20 @@
   </footer>
 
   <!-- Scripts -->
+  <script>
+    window.openAdminModal = function() {
+      var authModal = document.getElementById("adminAuthModal");
+      var pubModal = document.getElementById("adminPublishModal");
+      var isAuth = (sessionStorage.getItem("admin_authenticated") === "1234" || localStorage.getItem("admin_authenticated") === "1234");
+      if (isAuth) {
+        if (pubModal) pubModal.style.display = "flex";
+      } else {
+        if (authModal) authModal.style.display = "flex";
+        var pinInp = document.getElementById("adminPinInput");
+        if (pinInp) { pinInp.value = ""; pinInp.focus(); }
+      }
+    };
+  </script>
   <script src="js/app.js"></script>
 </body>
 </html>

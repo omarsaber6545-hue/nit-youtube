@@ -393,84 +393,106 @@ document.addEventListener("DOMContentLoaded", () => {
     announcerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const webhookUrl = (discordWebhookInput ? discordWebhookInput.value.trim() : "") ||
-                         localStorage.getItem("discord_webhook_url");
-
-      if (!webhookUrl || !webhookUrl.startsWith("https://discord.com/api/webhooks/")) {
-        alert("⚠️ يرجى إدخال رابط Webhook صالح لقناة الإعلانات بالديسكورد في الحقل المخصص أولاً!");
-        if (discordWebhookInput) discordWebhookInput.focus();
-        return;
-      }
-
       const platform = announcePlatform.value;
       const title = announceTitle.value.trim();
       const link = announceLink.value.trim();
       const ping = announcePing.value;
       const message = announceMessage.value.trim();
+      const webhookUrl = (discordWebhookInput ? discordWebhookInput.value.trim() : "") ||
+                         localStorage.getItem("discord_webhook_url");
 
       sendAnnouncementBtn.disabled = true;
-      sendAnnouncementBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري النشر في الديسكورد...</span>';
+      sendAnnouncementBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري النشر عبر بوت الديسكورد...</span>';
 
-      const platformMeta = {
-        youtube: { name: "🔴 YouTube | فيديو جديد", color: 16711680, icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png" },
-        tiktok: { name: "⚫ TikTok | مقطع جديد", color: 62206, icon: "https://cdn-icons-png.flaticon.com/512/3046/3046121.png" },
-        instagram: { name: "🟣 Instagram | منشور جديد", color: 14758000, icon: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png" },
-        facebook: { name: "🔵 Facebook | منشور جديد", color: 1603570, icon: "https://cdn-icons-png.flaticon.com/512/5968/5968764.png" },
-        general: { name: "📢 إشعار وتنبيه جديد", color: 15024404, icon: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png" }
-      };
+      let publishedSuccessfully = false;
 
-      const meta = platformMeta[platform] || platformMeta.general;
-
-      // Mentions
-      let content = "";
-      if (ping === "everyone") {
-        content = "🔔 **إشعار جديد للجميع | @everyone**\n> 🚀 **تم نشر محتوى جديد ومميز! تفقد التفاصيل بالأسفل:**";
-      } else if (ping === "youtube_role") {
-        content = "🔔 **إشعار جديد لمتابعي اليوتيوب!**\n> 📺 **فيديو جديد نزل الآن! شاهد الرابط بالأسفل:**";
-      }
-
-      // Build Discord Embed
-      const embed = {
-        title: `✨ ${title}`,
-        url: link,
-        color: meta.color,
-        author: {
-          name: `Horizon Services • ${meta.name}`,
-          icon_url: meta.icon
-        },
-        description: `${message ? `>>> 💬 **رسالة الإدارة:**\n${message}\n\n` : ""}` +
-                     `🔗 **الرابط:** [انقر هنا للمشاهدة والتفاعل مباشرة](${link})`,
-        footer: {
-          text: "Horizon Services • نظام النشر الآلي المعتمد",
-          icon_url: meta.icon
-        },
-        timestamp: new Date().toISOString()
-      };
-
-      if (platform === "youtube") {
-        const ytThumb = getYouTubeThumbnail(link);
-        if (ytThumb) {
-          embed.image = { url: ytThumb };
-        }
-      }
-
+      // 1. Try sending via serverless API /api/announce (Bot Token: MTU0MzY3...)
       try {
-        const response = await fetch(webhookUrl, {
+        const apiRes = await fetch("/api/announce", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "1234"
+          },
           body: JSON.stringify({
-            username: "Horizon Services • Announcer",
-            avatar_url: meta.icon,
-            content: content || undefined,
-            embeds: [embed]
+            pin: "1234",
+            platform,
+            title,
+            link,
+            ping,
+            message
           })
         });
 
-        if (!response.ok) {
-          throw new Error(`كود الاستجابة من ديسكورد: ${response.status}`);
+        if (apiRes.ok) {
+          const apiData = await apiRes.json();
+          if (apiData.success) {
+            publishedSuccessfully = true;
+          }
         }
+      } catch (apiErr) {
+        // Fallback to Webhook if API is unavailable (e.g. running on static file://)
+        console.log("Direct /api/announce not reachable, checking webhook fallback...", apiErr);
+      }
 
-        // Save announcement to local history
+      // 2. If not published via API, fallback to Webhook if configured
+      if (!publishedSuccessfully) {
+        if (webhookUrl && webhookUrl.startsWith("https://discord.com/api/webhooks/")) {
+          const platformMeta = {
+            youtube: { name: "🔴 YouTube | فيديو جديد", color: 16711680, icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png" },
+            tiktok: { name: "⚫ TikTok | مقطع جديد", color: 62206, icon: "https://cdn-icons-png.flaticon.com/512/3046/3046121.png" },
+            instagram: { name: "🟣 Instagram | منشور جديد", color: 14758000, icon: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png" },
+            facebook: { name: "🔵 Facebook | منشور جديد", color: 1603570, icon: "https://cdn-icons-png.flaticon.com/512/5968/5968764.png" },
+            general: { name: "📢 إشعار وتنبيه جديد", color: 15024404, icon: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png" }
+          };
+          const meta = platformMeta[platform] || platformMeta.general;
+
+          let content = "";
+          if (ping === "everyone") {
+            content = "🔔 **إشعار جديد للجميع | @everyone**\n> 🚀 **تم نشر محتوى جديد ومميز! تفقد التفاصيل بالأسفل:**";
+          } else if (ping === "youtube_role") {
+            content = "🔔 **إشعار جديد لمتابعي اليوتيوب!**\n> 📺 **فيديو جديد نزل الآن! شاهد الرابط بالأسفل:**";
+          }
+
+          const embed = {
+            title: `✨ ${title}`,
+            url: link,
+            color: meta.color,
+            author: { name: `Horizon Services • ${meta.name}`, icon_url: meta.icon },
+            description: `${message ? `>>> 💬 **رسالة الإدارة:**\n${message}\n\n` : ""}🔗 **الرابط:** [انقر هنا للمشاهدة والتفاعل مباشرة](${link})`,
+            footer: { text: "Horizon Services • نظام النشر الآلي المعتمد", icon_url: meta.icon },
+            timestamp: new Date().toISOString()
+          };
+
+          if (platform === "youtube") {
+            const ytThumb = getYouTubeThumbnail(link);
+            if (ytThumb) embed.image = { url: ytThumb };
+          }
+
+          try {
+            const hookRes = await fetch(webhookUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                username: "Horizon Services • Announcer",
+                avatar_url: meta.icon,
+                content: content || undefined,
+                embeds: [embed]
+              })
+            });
+            if (hookRes.ok) {
+              publishedSuccessfully = true;
+            }
+          } catch (hookErr) {
+            console.error("Webhook fallback error:", hookErr);
+          }
+        }
+      }
+
+      sendAnnouncementBtn.disabled = false;
+      sendAnnouncementBtn.innerHTML = '<i class="fa-brands fa-discord"></i> <span>🚀 إرسال ونشر الإشعار في سيرفر الديسكورد الآن</span>';
+
+      if (publishedSuccessfully) {
         saveAnnouncementToHistory({
           id: Date.now().toString(),
           platform,
@@ -485,12 +507,8 @@ document.addEventListener("DOMContentLoaded", () => {
         announceLink.value = "";
         announceMessage.value = "";
         renderAnnouncementsHistory();
-      } catch (err) {
-        console.error("Announcement error:", err);
-        alert(`❌ تعذر إرسال الإشعار إلى الديسكورد:\n${err.message}\nتأكد من صحة رابط الـ Webhook وصلاحيات الروم.`);
-      } finally {
-        sendAnnouncementBtn.disabled = false;
-        sendAnnouncementBtn.innerHTML = '<i class="fa-brands fa-discord"></i> <span>🚀 إرسال ونشر الإشعار في سيرفر الديسكورد الآن</span>';
+      } else {
+        alert("⚠️ تعذر النشر تلقائياً:\nإذا كنت تفتح الصفحة كملف محلي (file://)، يرجى إدخال رابط Webhook من روم الديسكورد في الحقل المخصص أعلاه.\nأما عند رفع الموقع على Vercel أو الخادم سيعمل النشر تلقائياً عبر البوت!");
       }
     });
   }
