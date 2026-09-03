@@ -13,7 +13,7 @@ const DEFAULT_DATA = {
     verified: true,
     location: "مصر / العالم العربي",
     email: "contact@horizonservices.com",
-    discordServer: "https://discord.gg/hz-s"
+    discordServer: "https://discord.gg/swj6DHy2a"
   },
   socials: [
     {
@@ -68,14 +68,14 @@ const DEFAULT_DATA = {
     {
       id: "discord",
       name: "Discord",
-      title: "مجتمع وسيرفر Horizon Services",
-      username: "Horizon Community",
-      url: "https://discord.gg/hz-s",
+      title: "مجتمع وسيرفر الديسكورد",
+      username: "Horizon Services",
+      url: "https://discord.gg/swj6DHy2a",
       icon: "fa-brands fa-discord",
       color: "#5865F2",
       gradient: "linear-gradient(135deg, #5865F2, #3c45a5)",
       description: "انضم لسيرفرنا للدردشة، الألعاب، طلب الخدمات والمشاركة في الفعاليات!",
-      subscribers: "15K+"
+      subscribers: "+15K"
     }
   ]
 };

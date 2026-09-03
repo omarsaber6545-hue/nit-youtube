@@ -8,13 +8,13 @@
     "verified": true,
     "location": "Egypt / Arab World",
     "email": "contact@horizonservices.com",
-    "discordServer": "https://discord.gg/hz-s"
+    "discordServer": "https://discord.gg/swj6DHy2a"
   },
   "bot": {
     "name": "Horizon Master",
     "status": "Online",
     "serverName": "Horizon Services",
-    "inviteUrl": "https://discord.gg/hz-s",
+    "inviteUrl": "https://discord.gg/swj6DHy2a",
     "features": [
       "تشغيل موسيقى وصوتيات 24/7",
       "بناء وإدارة السيرفرات بالكامل",
@@ -81,12 +81,12 @@
       "name": "Discord",
       "title": "مجتمع وسيرفر الديسكورد",
       "username": "Horizon Services",
-      "url": "https://discord.gg/hz-s",
+      "url": "https://discord.gg/swj6DHy2a",
       "icon": "fa-brands fa-discord",
       "color": "#5865F2",
       "gradient": "linear-gradient(135deg, #5865F2, #3c45a5)",
       "description": "انضم لسيرفرنا للدردشة، الألعاب، طلب الخدمات والمشاركة في الفعاليات!",
-      "subscribers": "15K+",
+      "subscribers": "+15K",
       "active": true
     }
   ],

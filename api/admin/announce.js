@@ -138,6 +138,12 @@ module.exports = async (req, res) => {
             style: 5,
             label: 'انقر لفتح الرابط والمشاهدة 🔗',
             url: cleanLink
+          },
+          {
+            type: 2,
+            style: 5,
+            label: 'سيرفر الديسكورد 💬',
+            url: 'https://discord.gg/swj6DHy2a'
           }
         ]
       }
