@@ -419,13 +419,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const data = await res.json();
 
+  const publishSuccessModal = document.getElementById("publishSuccessModal");
+  const successModalTitle = document.getElementById("successModalTitle");
+  const closeSuccessModalBtn = document.getElementById("closeSuccessModalBtn");
+
+  if (closeSuccessModalBtn && publishSuccessModal) {
+    closeSuccessModalBtn.addEventListener("click", () => {
+      publishSuccessModal.style.display = "none";
+    });
+  }
+
+  if (publishSuccessModal) {
+    publishSuccessModal.addEventListener("click", (e) => {
+      if (e.target === publishSuccessModal) {
+        publishSuccessModal.style.display = "none";
+      }
+    });
+  }
+
         if (res.ok && data.success) {
+          // 1. Show Big Celebratory Success Modal
+          if (successModalTitle) successModalTitle.textContent = title;
+          if (publishSuccessModal) publishSuccessModal.style.display = "flex";
+
+          // 2. Top-of-form Success Banner
           if (publishAlertBox) {
             publishAlertBox.className = "publish-alert-box success";
             publishAlertBox.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${data.message || 'تم إرسال الإشعار إلى سيرفر الديسكورد بنجاح! 🚀'}</span>`;
+            publishAlertBox.scrollIntoView({ behavior: "smooth", block: "center" });
           }
 
-          showToast(data.message || "🚀 تم نشر الإشعار في سيرفر الديسكورد بنجاح!");
+          // 3. Floating Toast
+          showToast("🎉 تم نشر الإشعار في سيرفر الديسكورد بنجاح!");
+          
           if (announceTitle) announceTitle.value = "";
           if (announceLink) announceLink.value = "";
           if (announceMessage) announceMessage.value = "";
@@ -448,7 +474,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (publishAlertBox) {
           publishAlertBox.className = "publish-alert-box error";
           publishAlertBox.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>❌ ${err.message || 'تعذر الاتصال بالبوت أو الخادم'}</span>`;
+          publishAlertBox.scrollIntoView({ behavior: "smooth", block: "center" });
         }
+        showToast("❌ تعذر إرسال الإشعار");
       } finally {
         sendAnnouncementBtn.disabled = false;
         sendAnnouncementBtn.innerHTML = '<i class="fa-brands fa-discord"></i> <span>🚀 إرسال ونشر الإشعار في سيرفر الديسكورد الآن</span>';
