@@ -12,12 +12,80 @@ const TOKEN = process.env.DISCORD_TOKEN || DEFAULT_TOKEN;
 const CHANNEL_ID = process.env.ANNOUNCE_CHANNEL_ID || '1543682822471163974';
 const ADMIN_PIN = process.env.ADMIN_PIN || '1234';
 
-function getYouTubeThumbnail(url) {
+async function getMediaImage(platform, url) {
   if (!url) return null;
-  const match = url.match(
-    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/
-  );
-  return match && match[1] ? `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg` : null;
+
+  // 1. YouTube video thumbnail (support regular videos and shorts)
+  if (platform === 'youtube' || url.includes('youtu.be') || url.includes('youtube.com')) {
+    const match = url.match(
+      /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/
+    );
+    if (match && match[1]) {
+      return { url: `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg` };
+    }
+  }
+
+  // 2. Instagram post / reel / tv preview image
+  if (platform === 'instagram' || url.includes('instagram.com')) {
+    try {
+      const res = await fetch(url, {
+        headers: {
+          'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+          'Accept': 'text/html,application/xhtml+xml,application/xml'
+        },
+        signal: AbortSignal.timeout(6000)
+      });
+      if (res.ok) {
+        const html = await res.text();
+        const match =
+          html.match(/<meta property="og:image" content="([^"]+)"/i) ||
+          html.match(/<meta name="twitter:image" content="([^"]+)"/i);
+        if (match && match[1]) {
+          const rawUrl = match[1].replace(/&amp;/g, '&');
+          try {
+            const imgRes = await fetch(rawUrl, { signal: AbortSignal.timeout(6000) });
+            if (imgRes.ok) {
+              const buffer = await imgRes.arrayBuffer();
+              return { buffer, filename: 'post_image.jpg' };
+            }
+          } catch {}
+          return { url: rawUrl };
+        }
+      }
+    } catch (err) {
+      console.error('Instagram image fetch error:', err.message);
+    }
+  }
+
+  // 3. TikTok video thumbnail
+  if (platform === 'tiktok' || url.includes('tiktok.com')) {
+    try {
+      const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
+      const res = await fetch(oembedUrl, { signal: AbortSignal.timeout(5000) });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.thumbnail_url) {
+          try {
+            const imgRes = await fetch(data.thumbnail_url, { signal: AbortSignal.timeout(6000) });
+            if (imgRes.ok) {
+              const buffer = await imgRes.arrayBuffer();
+              return { buffer, filename: 'post_image.jpg' };
+            }
+          } catch {}
+          return { url: data.thumbnail_url };
+        }
+      }
+    } catch (err) {
+      console.error('TikTok thumbnail fetch error:', err.message);
+    }
+  }
+
+  // 4. Direct image link
+  if (url.match(/\.(jpeg|jpg|gif|png|webp)(\?.*)?$/i)) {
+    return { url };
+  }
+
+  return null;
 }
 
 module.exports = async (req, res) => {
@@ -121,9 +189,16 @@ module.exports = async (req, res) => {
     timestamp: new Date().toISOString()
   };
 
-  if (platform === 'youtube') {
-    const thumb = getYouTubeThumbnail(cleanLink);
-    if (thumb) embed.image = { url: thumb };
+  const mediaResult = await getMediaImage(platform, cleanLink);
+  let postImageBuffer = null;
+
+  if (mediaResult) {
+    if (mediaResult.buffer) {
+      postImageBuffer = mediaResult.buffer;
+      embed.image = { url: 'attachment://post_image.jpg' };
+    } else if (mediaResult.url) {
+      embed.image = { url: mediaResult.url };
+    }
   }
 
   const messagePayload = {
@@ -154,11 +229,19 @@ module.exports = async (req, res) => {
     let discordResStatus = 0;
     let discordResBody = '';
 
-    if (iconBuffer) {
+    if (iconBuffer || postImageBuffer) {
       const formData = new FormData();
       formData.append('payload_json', JSON.stringify(messagePayload));
-      const blob = new Blob([iconBuffer], { type: 'image/png' });
-      formData.append('files[0]', blob, 'icon.png');
+
+      let fileIdx = 0;
+      if (iconBuffer) {
+        const blob = new Blob([iconBuffer], { type: 'image/png' });
+        formData.append(`files[${fileIdx++}]`, blob, 'icon.png');
+      }
+      if (postImageBuffer) {
+        const postBlob = new Blob([postImageBuffer], { type: 'image/jpeg' });
+        formData.append(`files[${fileIdx++}]`, postBlob, 'post_image.jpg');
+      }
 
       const dRes = await fetch(`https://discord.com/api/v10/channels/${CHANNEL_ID}/messages`, {
         method: 'POST',

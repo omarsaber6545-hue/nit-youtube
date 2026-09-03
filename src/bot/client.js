@@ -150,14 +150,42 @@ class BotService {
     const currentPlat = platformLabels[platform] || platformLabels.general;
     const currentIcon = platformIcons[platform] || platformIcons.general;
 
-    // Helper to extract YouTube video thumbnail
-    function getYouTubeThumbnail(url) {
+    // Helper to extract video/post thumbnail
+    async function getMediaImage(plat, url) {
       if (!url) return null;
-      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
-      return match && match[1] ? `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg` : null;
+      if (plat === 'youtube' || url.includes('youtu.be') || url.includes('youtube.com')) {
+        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+        return match && match[1] ? `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg` : null;
+      }
+      if (plat === 'instagram' || url.includes('instagram.com')) {
+        try {
+          const res = await fetch(url, {
+            headers: {
+              'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+              'Accept': 'text/html,application/xhtml+xml,application/xml'
+            },
+            signal: AbortSignal.timeout(6000)
+          });
+          if (res.ok) {
+            const html = await res.text();
+            const match = html.match(/<meta property="og:image" content="([^"]+)"/i) || html.match(/<meta name="twitter:image" content="([^"]+)"/i);
+            if (match && match[1]) return match[1].replace(/&amp;/g, '&');
+          }
+        } catch {}
+      }
+      if (plat === 'tiktok' || url.includes('tiktok.com')) {
+        try {
+          const oRes = await fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`, { signal: AbortSignal.timeout(5000) });
+          if (oRes.ok) {
+            const oData = await oRes.json();
+            if (oData.thumbnail_url) return oData.thumbnail_url;
+          }
+        } catch {}
+      }
+      return null;
     }
 
-    const ytThumbnail = platform === 'youtube' ? getYouTubeThumbnail(link) : null;
+    const postImageUrl = await getMediaImage(platform, link);
 
     const { ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require('discord.js');
 
@@ -182,8 +210,8 @@ class BotService {
       })
       .setTimestamp();
 
-    if (ytThumbnail) {
-      embed.setImage(ytThumbnail);
+    if (postImageUrl) {
+      embed.setImage(postImageUrl);
     }
 
     // Interactive Action Buttons
