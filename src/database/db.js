@@ -86,6 +86,27 @@ const DEFAULT_DATA = {
   analytics: {
     totalPageViews: 0,
     lastVisit: null
+  },
+  autoPoster: {
+    youtube: {
+      enabled: true,
+      channelId: "UCVXcZwtifEKN_oQItYwFKDg",
+      channelUrl: "https://www.youtube.com/@horizonservices-dis",
+      lastVideoId: "dQw4w9WgXcQ",
+      lastVideoTitle: ""
+    },
+    tiktok: {
+      enabled: true,
+      username: "@horizon_services252",
+      lastPostId: ""
+    },
+    instagram: {
+      enabled: true,
+      username: "@horizon_services251",
+      lastPostId: ""
+    },
+    webhookSecret: "horizon_auto_2026",
+    lastAutoPostTime: null
   }
 };
 
@@ -231,6 +252,114 @@ class Database {
       lastVisit: this.data.analytics.lastVisit,
       platformClicks
     };
+  }
+
+  getAutoPoster() {
+    if (!this.data.autoPoster) {
+      this.data.autoPoster = {
+        youtube: {
+          enabled: true,
+          channelId: "UCVXcZwtifEKN_oQItYwFKDg",
+          channelUrl: "https://www.youtube.com/@horizonservices-dis",
+          lastVideoId: "dQw4w9WgXcQ",
+          lastVideoTitle: ""
+        },
+        tiktok: {
+          enabled: true,
+          username: "@horizon_services252",
+          lastPostId: ""
+        },
+        instagram: {
+          enabled: true,
+          username: "@horizon_services251",
+          lastPostId: ""
+        },
+        webhookSecret: "horizon_auto_2026",
+        lastAutoPostTime: null
+      };
+      this.save();
+    }
+    return this.data.autoPoster;
+  }
+
+  updateAutoPoster(settings) {
+    this.data.autoPoster = {
+      ...this.getAutoPoster(),
+      ...settings
+    };
+    this.save();
+    return this.data.autoPoster;
+  }
+
+  recordAutoPost(platform, itemId, title = '') {
+    const ap = this.getAutoPoster();
+    if (platform === 'youtube') {
+      ap.youtube.lastVideoId = itemId;
+      if (title) ap.youtube.lastVideoTitle = title;
+    } else if (platform === 'tiktok') {
+      ap.tiktok.lastPostId = itemId;
+    } else if (platform === 'instagram') {
+      ap.instagram.lastPostId = itemId;
+    }
+    ap.lastAutoPostTime = new Date().toISOString();
+    this.save();
+    return ap;
+  }
+
+  getOAuthData() {
+    if (!this.data.oauth) {
+      this.data.oauth = {
+        youtube: { connected: false, account: null, tokens: null, updatedAt: null },
+        tiktok: { connected: false, account: null, tokens: null, updatedAt: null },
+        instagram: { connected: false, account: null, tokens: null, updatedAt: null },
+        credentials: {
+          googleClientId: process.env.GOOGLE_CLIENT_ID || "",
+          googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+          tiktokClientKey: process.env.TIKTOK_CLIENT_KEY || "",
+          tiktokClientSecret: process.env.TIKTOK_CLIENT_SECRET || "",
+          instagramClientId: process.env.INSTAGRAM_CLIENT_ID || "",
+          instagramClientSecret: process.env.INSTAGRAM_CLIENT_SECRET || ""
+        }
+      };
+      this.save();
+    }
+    return this.data.oauth;
+  }
+
+  saveOAuthTokens(platform, tokens, account = {}) {
+    const oauth = this.getOAuthData();
+    oauth[platform] = {
+      connected: true,
+      tokens,
+      account,
+      updatedAt: new Date().toISOString()
+    };
+    this.save();
+    return oauth[platform];
+  }
+
+  disconnectOAuth(platform) {
+    const oauth = this.getOAuthData();
+    if (oauth[platform]) {
+      oauth[platform] = {
+        connected: false,
+        account: null,
+        tokens: null,
+        updatedAt: new Date().toISOString()
+      };
+      this.save();
+    }
+    return oauth[platform];
+  }
+
+  saveOAuthCredentials(creds) {
+    const oauth = this.getOAuthData();
+    oauth.credentials = {
+      ...oauth.credentials,
+      ...creds
+    };
+    this.save();
+    return oauth.credentials;
   }
 }
 

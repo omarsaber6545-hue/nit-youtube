@@ -2,6 +2,30 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
+  "crons": [
+    {
+      "path": "/api/cron/check-socials",
+      "schedule": "*/10 * * * *"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/src/web/public/admin.html"
+    },
+    {
+      "source": "/admin.html",
+      "destination": "/src/web/public/admin.html"
+    },
+    {
+      "source": "/css/admin.css",
+      "destination": "/src/web/public/css/admin.css"
+    },
+    {
+      "source": "/js/admin.js",
+      "destination": "/src/web/public/js/admin.js"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

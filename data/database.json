@@ -107,5 +107,54 @@
   "analytics": {
     "totalPageViews": 6,
     "lastVisit": "2026-08-30T20:41:46.438Z"
+  },
+  "autoPoster": {
+    "youtube": {
+      "enabled": true,
+      "channelId": "UCVXcZwtifEKN_oQItYwFKDg",
+      "channelUrl": "https://www.youtube.com/@horizonservices-dis",
+      "lastVideoId": "dQw4w9WgXcQ",
+      "lastVideoTitle": ""
+    },
+    "tiktok": {
+      "enabled": true,
+      "username": "@horizon_services252",
+      "lastPostId": ""
+    },
+    "instagram": {
+      "enabled": true,
+      "username": "@horizon_services251",
+      "lastPostId": ""
+    },
+    "webhookSecret": "horizon_auto_2026",
+    "lastAutoPostTime": null
+  },
+  "oauth": {
+    "youtube": {
+      "connected": false,
+      "account": null,
+      "tokens": null,
+      "updatedAt": "2026-09-04T01:01:40.302Z"
+    },
+    "tiktok": {
+      "connected": false,
+      "account": null,
+      "tokens": null,
+      "updatedAt": null
+    },
+    "instagram": {
+      "connected": false,
+      "account": null,
+      "tokens": null,
+      "updatedAt": null
+    },
+    "credentials": {
+      "googleClientId": "",
+      "googleClientSecret": "",
+      "tiktokClientKey": "",
+      "tiktokClientSecret": "",
+      "instagramClientId": "",
+      "instagramClientSecret": ""
+    }
   }
 }

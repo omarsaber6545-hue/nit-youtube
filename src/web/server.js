@@ -182,6 +182,73 @@ app.delete('/api/admin/announcements/:id', requireAuth, async (req, res) => {
   }
 });
 
+// ================= AUTO-POSTER & WEBHOOK ROUTES ================= //
+
+let checkSocialsHandler, autoPostWebhookHandler, autoPosterAdminHandler;
+try {
+  checkSocialsHandler = require('../../../api/cron/check-socials');
+  autoPostWebhookHandler = require('../../../api/webhook/auto-post');
+  autoPosterAdminHandler = require('../../../api/admin/auto-poster');
+} catch (e) {
+  try {
+    checkSocialsHandler = require('../../api/cron/check-socials');
+    autoPostWebhookHandler = require('../../api/webhook/auto-post');
+    autoPosterAdminHandler = require('../../api/admin/auto-poster');
+  } catch (err) {}
+}
+
+if (checkSocialsHandler) {
+  app.all('/api/cron/check-socials', (req, res) => checkSocialsHandler(req, res));
+}
+if (autoPostWebhookHandler) {
+  app.all('/api/webhook/auto-post', (req, res) => autoPostWebhookHandler(req, res));
+}
+if (autoPosterAdminHandler) {
+  app.all('/api/admin/auto-poster', (req, res) => autoPosterAdminHandler(req, res));
+}
+
+// OAuth 2.0 routes
+let oauthLoginHandler, oauthCallbackHandler, oauthStatusHandler;
+try {
+  oauthLoginHandler = require('../../../api/auth/login');
+  oauthCallbackHandler = require('../../../api/auth/callback');
+  oauthStatusHandler = require('../../../api/auth/status');
+} catch (e) {
+  try {
+    oauthLoginHandler = require('../../api/auth/login');
+    oauthCallbackHandler = require('../../api/auth/callback');
+    oauthStatusHandler = require('../../api/auth/status');
+  } catch (err) {}
+}
+
+if (oauthLoginHandler) {
+  app.all('/api/auth/login', (req, res) => oauthLoginHandler(req, res));
+}
+if (oauthCallbackHandler) {
+  app.all('/api/auth/callback', (req, res) => oauthCallbackHandler(req, res));
+}
+if (oauthStatusHandler) {
+  app.all('/api/auth/status', (req, res) => oauthStatusHandler(req, res));
+  app.all('/api/auth/disconnect', (req, res) => oauthStatusHandler(req, res));
+  app.all('/api/auth/credentials', (req, res) => oauthStatusHandler(req, res));
+}
+
+// Background auto-checker (runs every 10 minutes when running locally/VPS)
+if (checkSocialsHandler) {
+  setInterval(async () => {
+    try {
+      const dummyReq = { method: 'GET', query: { key: 'horizon_auto_2026' }, headers: {} };
+      const dummyRes = {
+        setHeader: () => {},
+        status: () => ({ json: () => {}, end: () => {} })
+      };
+      await checkSocialsHandler(dummyReq, dummyRes);
+    } catch (e) {
+      console.error('[Background Auto-Checker Error]:', e.message);
+    }
+  }, 10 * 60 * 1000);
+}
+
 // Catch-all route to serve index.html for unknown routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../', 'index.html'));
