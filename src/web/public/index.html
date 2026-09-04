@@ -3,49 +3,459 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>بوابة السوشيال ميديا | Social Media Hub</title>
+  <title>Horizon Services | بوابة السوشيال ميديا والبوت</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="الصفحة الرسمية لجميع حسابات وروابط التواصل الاجتماعي (يوتيوب، تيك توك، انستغرام، فيسبوك، ديسكورد).">
-  <meta name="keywords" content="social media, discord bot, youtube, tiktok, instagram, facebook, links">
-  <meta property="og:title" content="Social Media Hub">
-  <meta property="og:description" content="تابعني على جميع منصات التواصل الاجتماعي">
+  <meta name="description" content="البوابة الرسمية لـ Horizon Services وصانع المحتوى عمر الشامي. تابع حساباتنا على يوتيوب، تيك توك، انستغرام وانضم لمجتمع الديسكورد.">
+  <meta name="keywords" content="Horizon Services, Discord Bot, YouTube, TikTok, Instagram, Facebook, Omar Creator, البرمجة">
+  <meta property="og:title" content="Horizon Services | Official Hub">
+  <meta property="og:description" content="البوابة الرسمية لجميع حسابات السوشيال ميديا، خدمات البرمجة وبوت الديسكورد.">
   <meta property="og:type" content="website">
+  <meta name="theme-color" content="#E50914">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/avatar.png">
 
   <!-- Google Fonts: Cairo & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- FontAwesome Icons -->
+  <!-- FontAwesome 6 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Main Stylesheet (with cache buster) -->
+  <link rel="stylesheet" href="css/style.css?v=8.5">
+
+  <!-- Guaranteed Embedded Styles for Admin & Announcer Modals -->
+  <style>
+    /* Modal Base Overlay - Hidden by default */
+    .modal-overlay {
+      display: none;
+      position: fixed !important;
+      inset: 0 !important;
+      background: rgba(0, 0, 0, 0.85) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      z-index: 10000 !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 18px !important;
+    }
+    .modal-overlay.open {
+      display: flex !important;
+    }
+
+    /* Modal Cards */
+    .modal-card {
+      background: #0E1118 !important;
+      border: 1px solid rgba(229, 9, 20, 0.4) !important;
+      border-radius: 18px !important;
+      width: 100% !important;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(229, 9, 20, 0.25) !important;
+      color: #fff !important;
+      font-family: 'Cairo', sans-serif !important;
+      box-sizing: border-box !important;
+    }
+
+    .auth-card {
+      max-width: 440px !important;
+      padding: 26px !important;
+    }
+
+    .publish-card {
+      max-width: 640px !important;
+      padding: 24px !important;
+      max-height: 90vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .modal-header {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      margin-bottom: 18px !important;
+      padding-bottom: 12px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .modal-header h3 {
+      font-size: 1.25rem !important;
+      font-weight: 800 !important;
+      margin: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      color: #fff !important;
+    }
+
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: none !important;
+      color: #8892B0 !important;
+      width: 34px !important;
+      height: 34px !important;
+      border-radius: 50% !important;
+      font-size: 1.4rem !important;
+      line-height: 1 !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.25) !important;
+      color: #FF4757 !important;
+    }
+
+    .modal-desc {
+      color: #8892B0 !important;
+      font-size: 0.95rem !important;
+      margin-bottom: 16px !important;
+      line-height: 1.6 !important;
+    }
+
+    /* Auth PIN Input */
+    .admin-pin-field {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 2px solid rgba(255, 255, 255, 0.15) !important;
+      border-radius: 12px !important;
+      padding: 12px 18px !important;
+      color: #fff !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-size: 1.2rem !important;
+      font-weight: 700 !important;
+      text-align: center !important;
+      letter-spacing: 4px !important;
+      margin-bottom: 14px !important;
+      transition: all 0.25s ease !important;
+    }
+
+    .admin-pin-field:focus {
+      outline: none !important;
+      border-color: #E50914 !important;
+      background: rgba(229, 9, 20, 0.08) !important;
+      box-shadow: 0 0 16px rgba(229, 9, 20, 0.4) !important;
+    }
+
+    /* Primary Block Button */
+    .primary-btn-block {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 13px !important;
+      background: linear-gradient(135deg, #E50914 0%, #B81D24 100%) !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 12px !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-weight: 800 !important;
+      font-size: 1.05rem !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 10px !important;
+      box-shadow: 0 4px 18px rgba(229, 9, 20, 0.4) !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .primary-btn-block:hover {
+      background: linear-gradient(135deg, #FF1A27 0%, #D4141E 100%) !important;
+      box-shadow: 0 6px 24px rgba(229, 9, 20, 0.6) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    .auth-error-msg {
+      color: #FF4757 !important;
+      font-size: 0.9rem !important;
+      font-weight: 700 !important;
+      text-align: center !important;
+      margin-bottom: 12px !important;
+    }
+
+    /* Announcer Modal Elements */
+    .form-group-modal {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 6px !important;
+      margin-bottom: 14px !important;
+      text-align: right !important;
+    }
+
+    .form-group-modal label {
+      font-size: 0.88rem !important;
+      font-weight: 700 !important;
+      color: #E2E8F0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    .form-group-modal input,
+    .form-group-modal select,
+    .form-group-modal textarea {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      border-radius: 10px !important;
+      padding: 10px 14px !important;
+      color: #fff !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-size: 0.92rem !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .form-group-modal select option {
+      background: #0E1118 !important;
+      color: #fff !important;
+    }
+
+    .form-group-modal input:focus,
+    .form-group-modal select:focus,
+    .form-group-modal textarea:focus {
+      outline: none !important;
+      border-color: #E50914 !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 0 12px rgba(229, 9, 20, 0.3) !important;
+    }
+
+    /* Discord Publish Button */
+    .discord-publish-btn {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 14px !important;
+      background: #5865F2 !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 12px !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-weight: 800 !important;
+      font-size: 1.05rem !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 10px !important;
+      margin-top: 10px !important;
+      margin-bottom: 20px !important;
+      box-shadow: 0 4px 18px rgba(88, 101, 242, 0.45) !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .discord-publish-btn:hover {
+      background: #4752C4 !important;
+      box-shadow: 0 6px 24px rgba(88, 101, 242, 0.65) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    /* Webhook Settings Box & Status */
+    .webhook-settings-box {
+      background: rgba(88, 101, 242, 0.08) !important;
+      border: 1px solid rgba(88, 101, 242, 0.28) !important;
+      border-radius: 14px !important;
+      padding: 16px !important;
+      margin-bottom: 20px !important;
+    }
+
+    .webhook-header {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      margin-bottom: 10px !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+    }
+
+    .webhook-header label {
+      font-size: 0.9rem !important;
+      font-weight: 800 !important;
+      color: #93A4F8 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    .webhook-status-pill {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      padding: 3px 10px !important;
+      border-radius: 999px !important;
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      color: #94A3B8 !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .webhook-status-pill.connected {
+      background: rgba(46, 213, 115, 0.15) !important;
+      border-color: rgba(46, 213, 115, 0.4) !important;
+      color: #2ED573 !important;
+    }
+
+    .webhook-status-pill.disconnected {
+      background: rgba(255, 71, 87, 0.12) !important;
+      border-color: rgba(255, 71, 87, 0.3) !important;
+      color: #FF4757 !important;
+    }
+
+    .status-indicator-dot {
+      width: 8px !important;
+      height: 8px !important;
+      border-radius: 50% !important;
+      background: #94A3B8 !important;
+      display: inline-block !important;
+    }
+
+    .webhook-status-pill.connected .status-indicator-dot {
+      background: #2ED573 !important;
+      box-shadow: 0 0 8px #2ED573 !important;
+    }
+
+    .webhook-status-pill.disconnected .status-indicator-dot {
+      background: #FF4757 !important;
+    }
+
+    .webhook-input-group {
+      display: flex !important;
+      gap: 8px !important;
+      margin-bottom: 8px !important;
+    }
+
+    .webhook-input-group input {
+      flex: 1 !important;
+      background: rgba(0, 0, 0, 0.45) !important;
+      border: 1px solid rgba(88, 101, 242, 0.35) !important;
+      border-radius: 10px !important;
+      padding: 10px 14px !important;
+      color: #fff !important;
+      font-size: 0.88rem !important;
+      font-family: inherit !important;
+    }
+
+    .test-webhook-btn {
+      background: rgba(88, 101, 242, 0.25) !important;
+      border: 1px solid rgba(88, 101, 242, 0.5) !important;
+      color: #C7D2FE !important;
+      border-radius: 10px !important;
+      padding: 0 16px !important;
+      font-family: 'Cairo', sans-serif !important;
+      font-size: 0.88rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      white-space: nowrap !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .test-webhook-btn:hover {
+      background: #5865F2 !important;
+      color: #fff !important;
+      box-shadow: 0 0 14px rgba(88, 101, 242, 0.5) !important;
+    }
+
+    .webhook-feedback-msg {
+      font-size: 0.85rem !important;
+      font-weight: 700 !important;
+      padding: 8px 12px !important;
+      border-radius: 8px !important;
+      margin-bottom: 8px !important;
+      display: none;
+    }
+
+    .webhook-feedback-msg.success {
+      background: rgba(46, 213, 115, 0.15) !important;
+      border: 1px solid rgba(46, 213, 115, 0.4) !important;
+      color: #2ED573 !important;
+      display: block !important;
+    }
+
+    .webhook-feedback-msg.error {
+      background: rgba(255, 71, 87, 0.15) !important;
+      border: 1px solid rgba(255, 71, 87, 0.4) !important;
+      color: #FF4757 !important;
+      display: block !important;
+    }
+
+    .field-hint {
+      font-size: 0.8rem !important;
+      color: #94A3B8 !important;
+      line-height: 1.5 !important;
+      display: block !important;
+    }
+
+    /* Form Alert Box */
+    .publish-alert-box {
+      padding: 12px 16px !important;
+      border-radius: 10px !important;
+      font-size: 0.95rem !important;
+      font-weight: 700 !important;
+      margin-bottom: 14px !important;
+      display: none;
+      align-items: center !important;
+      gap: 10px !important;
+      line-height: 1.5 !important;
+    }
+
+    .publish-alert-box.success {
+      background: rgba(46, 213, 115, 0.2) !important;
+      border: 1px solid #2ED573 !important;
+      color: #2ED573 !important;
+      display: flex !important;
+      animation: alertSlideIn 0.3s ease !important;
+    }
+
+    .publish-alert-box.error {
+      background: rgba(255, 71, 87, 0.2) !important;
+      border: 1px solid #FF4757 !important;
+      color: #FF4757 !important;
+      display: flex !important;
+      animation: alertSlideIn 0.3s ease !important;
+    }
+
+    @keyframes alertSlideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-  <!-- Ambient Animated Background Particles/Gradients -->
+  <!-- Ambient Animated Background Glows -->
   <div class="bg-glow glow-1"></div>
   <div class="bg-glow glow-2"></div>
   <div class="bg-glow glow-3"></div>
 
-  <!-- Header Navigation -->
+  <!-- Top Header Navigation -->
   <header class="top-nav">
     <div class="nav-left">
-      <span class="bot-badge" id="botStatusBadge">
+      <div class="bot-badge" id="botStatusBadge">
         <span class="pulse-dot"></span>
-        <span id="botStatusText">جاري الاتصال بالبوت...</span>
-      </span>
+        <span id="botStatusText">Horizon Master • متصل 24/7 🟢</span>
+      </div>
     </div>
     <div class="nav-right">
       <button class="nav-btn" id="sharePageBtn" title="مشاركة الصفحة">
         <i class="fa-solid fa-share-nodes"></i>
         <span>مشاركة</span>
       </button>
-      <a href="admin.html" class="nav-btn admin-link-btn" title="لوحة التحكم">
-        <i class="fa-solid fa-sliders"></i>
-        <span>لوحة التحكم</span>
+      <a href="https://discord.gg/swj6DHy2a" target="_blank" rel="noopener noreferrer" class="nav-btn discord-nav-btn" title="انضمام لسيرفر الديسكورد">
+        <i class="fa-brands fa-discord"></i>
+        <span>سيرفر الديسكورد</span>
       </a>
+      <button class="nav-btn admin-nav-btn" id="openAdminBtn" onclick="window.openAdminModal()" title="لوحة النشر والإدارة">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>الأدمن</span>
+      </button>
     </div>
   </header>
 
@@ -55,77 +465,106 @@
     <!-- Profile Card Section -->
     <section class="profile-card" id="profileSection">
       <div class="banner-container">
-        <img src="" alt="Banner" id="profileBanner" class="profile-banner">
+        <img src="assets/avatar.png" alt="Horizon Services Banner" id="profileBanner" class="profile-banner">
         <div class="banner-overlay"></div>
       </div>
 
       <div class="avatar-wrapper">
-        <img src="" alt="Avatar" id="profileAvatar" class="profile-avatar">
-        <div class="verified-badge" title="حساب موثق">
+        <img src="assets/avatar.png" alt="Avatar" id="profileAvatar" class="profile-avatar">
+        <div class="verified-badge" title="حساب موثق ومحمى">
           <i class="fa-solid fa-check"></i>
         </div>
       </div>
 
       <div class="profile-info">
-        <h1 class="creator-name" id="creatorName">جاري التحميل...</h1>
-        <span class="creator-handle" id="creatorHandle">@creator</span>
-        <p class="creator-bio" id="creatorBio">تحميل النبذة الشخصية...</p>
+        <h1 class="creator-name" id="creatorName">عمر الشامي - Omar Creator</h1>
+        <span class="creator-handle" id="creatorHandle">@omar_official • Horizon Services</span>
+        <p class="creator-bio" id="creatorBio">صانع محتوى ومطور أنظمة برمجية في Horizon Services. نقدم حلول الديسكورد، الويب واستضافات VPS السحابية 🚀</p>
         
         <div class="profile-tags" id="profileTags">
           <span class="tag"><i class="fa-solid fa-location-dot"></i> <span id="creatorLocation">مصر / العالم العربي</span></span>
-          <span class="tag"><i class="fa-solid fa-envelope"></i> <span id="creatorEmail">contact@creator.com</span></span>
+          <span class="tag"><i class="fa-solid fa-envelope"></i> <a href="mailto:horizonservices2510@gmail.com" id="creatorEmail" style="color: inherit; text-decoration: none;">horizonservices2510@gmail.com</a></span>
+          <span class="tag"><i class="fa-solid fa-shield-halved"></i> <span>Horizon Certified</span></span>
         </div>
       </div>
     </section>
 
-    <!-- Social Links Grid / Cards -->
-    <section class="socials-section">
-      <div class="section-title-wrap">
-        <h2 class="section-title">
-          <i class="fa-solid fa-link"></i> حساباتي الرسمية
-        </h2>
-        <span class="section-subtitle">انقر على أي منصة للانتقال إليها مباشرة</span>
-      </div>
-
-      <div class="social-cards-grid" id="socialCardsGrid">
-        <!-- Dynamically injected social cards -->
-        <div class="loading-state">
-          <div class="spinner"></div>
-          <p>جاري تحميل الروابط والمنصات...</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Featured YouTube Video Section -->
-    <section class="featured-video-section" id="featuredVideoSection" style="display: none;">
-      <div class="section-title-wrap">
-        <h2 class="section-title">
-          <i class="fa-brands fa-youtube" style="color: #ff0000;"></i> أحدث فيديو على يوتيوب
-        </h2>
-        <span class="section-subtitle">شاهد الفيديو مباشرة أو افتحه على التطبيق</span>
-      </div>
-      <div class="video-container">
-        <div class="iframe-wrapper">
-          <iframe id="ytVideoIframe" src="" title="Featured Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-      </div>
-    </section>
-
-    <!-- Discord Community Banner -->
+    <!-- Discord Bot & Community Showcase Banner -->
     <section class="discord-community-card" id="discordCommunityCard">
       <div class="discord-card-content">
         <div class="discord-icon-wrap">
           <i class="fa-brands fa-discord"></i>
         </div>
         <div class="discord-text">
-          <h3>انضم إلى مجتمع الديسكورد!</h3>
-          <p>تفاعل مع المتابعين، احصل على إشعارات فورية وشارك في الفعاليات والمسابقات.</p>
+          <div class="badge-row">
+            <span class="status-pill">🤖 Horizon Master Bot</span>
+            <span class="status-pill-online">🟢 24/7 Active</span>
+          </div>
+          <h3>انضم إلى مجتمع Horizon Services!</h3>
+          <p>تفاعل مع المطورين، استمتع بنظام الصوتيات 24/7، التقييمات، واطلب خدماتك البرمجية بكل سهولة.</p>
         </div>
       </div>
-      <a href="#" id="joinDiscordBtn" target="_blank" class="join-discord-action">
-        <span>انضمام للسيرفر</span>
+      <a href="https://discord.gg/swj6DHy2a" id="joinDiscordBtn" target="_blank" rel="noopener noreferrer" class="join-discord-action">
+        <span>دخول السيرفر الآن</span>
         <i class="fa-solid fa-arrow-left"></i>
       </a>
+    </section>
+
+    <!-- Social Links Grid / Cards -->
+    <section class="socials-section">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <i class="fa-solid fa-link"></i> المنصات وحسابات التواصل الرسمية
+        </h2>
+        <span class="section-subtitle">اختر المنصة وانقر للانتقال والمتابعة فوراً</span>
+      </div>
+
+      <div class="social-cards-grid" id="socialCardsGrid">
+        <!-- Dynamically rendered via JS -->
+      </div>
+    </section>
+
+    <!-- Featured YouTube Video Section -->
+    <section class="featured-video-section" id="featuredVideoSection">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <i class="fa-brands fa-youtube" style="color: #ff0000;"></i> أحدث فيديو وشرح على يوتيوب
+        </h2>
+        <span class="section-subtitle">شاهد الفيديو مباشرة أو انتقل إلى القناة الرسمية</span>
+      </div>
+      <div class="video-container">
+        <div class="iframe-wrapper">
+          <iframe id="ytVideoIframe" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Featured Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Horizon Services Showcase -->
+    <section class="services-section">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <i class="fa-solid fa-cubes"></i> خدمات ومشاريع Horizon Services
+        </h2>
+        <span class="section-subtitle">حلول تقنية متكاملة بأعلى معايير السرعة والاستقرار</span>
+      </div>
+
+      <div class="services-grid" id="servicesGrid">
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-robot"></i></div>
+          <h3>Discord & Telegram Bots</h3>
+          <p>برمجة بوتات احترافية متقدمة، ربط قواعد البيانات، وأنظمة حماية وتأسيس كاملة.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-globe"></i></div>
+          <h3>Websites & Full Projects</h3>
+          <p>تصميم وتطوير مواقع وتطبيقات ويب عصرية، سريعة ومتجاوبة بأحدث التقنيات.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-server"></i></div>
+          <h3>Cloud VPS & Hosting</h3>
+          <p>سيرفرات سحابية قوية ومحمية بنسبة 99.9% لتشغيل البوتات والمشاريع 24/7 دون انقطاع.</p>
+        </div>
+      </div>
     </section>
 
   </main>
@@ -134,24 +573,143 @@
   <div class="modal-overlay" id="shareModal" style="display: none;">
     <div class="modal-card">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-share-nodes"></i> مشاركة الصفحة</h3>
-        <button class="modal-close-btn" id="closeShareModal">&times;</button>
+        <h3><i class="fa-solid fa-share-nodes"></i> مشاركة الرابط</h3>
+        <button class="modal-close-btn" id="closeShareModal" aria-label="إغلاق">&times;</button>
       </div>
       <div class="modal-body">
         <p class="modal-desc">امسح رمز الـ QR أو انسخ الرابط لمشاركته مع أصدقائك وجمهورك:</p>
         
         <div class="qr-container">
-          <img id="qrCodeImg" src="" alt="QR Code">
+          <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://discord.gg/hz-s" alt="QR Code">
         </div>
 
         <div class="copy-box">
-          <input type="text" id="shareUrlInput" readonly>
+          <input type="text" id="shareUrlInput" readonly value="https://discord.gg/hz-s">
           <button id="copyUrlBtn" class="copy-btn">
             <i class="fa-regular fa-copy"></i>
-            <span>نسخ</span>
+            <span>نسخ الرابط</span>
           </button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Admin Authentication Modal (Password: 1234) -->
+  <div class="modal-overlay" id="adminAuthModal">
+    <div class="modal-card auth-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-lock"></i> تسجيل الدخول كمسؤول</h3>
+        <button class="modal-close-btn" id="closeAuthModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">أدخل رمز المرور السري للوصول إلى لوحة نشر الإشعارات:</p>
+        <form id="adminAuthForm">
+          <div class="form-group-modal">
+            <input type="password" id="adminPinInput" class="admin-pin-field" placeholder="رمز المرور (1234)" required autocomplete="current-password" autofocus>
+          </div>
+          <div id="authErrorMsg" class="auth-error-msg" style="display: none;">❌ رمز المرور غير صحيح! (الرمز هو 1234)</div>
+          <button type="submit" class="primary-btn-block">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>تأكيد الدخول</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Publishing Modal -->
+  <div class="modal-overlay" id="adminPublishModal">
+    <div class="modal-card publish-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3><i class="fa-solid fa-bullhorn" style="color: #E50914;"></i> مرسل إشعارات الديسكورد</h3>
+          <span class="admin-badge-pill">Admin Mode (1234)</span>
+        </div>
+        <div class="modal-header-actions">
+          <button class="logout-pill-btn" id="adminLogoutBtn" title="تسجيل الخروج">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>خروج</span>
+          </button>
+          <button class="modal-close-btn" id="closePublishModal">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body modal-scrollable">
+        
+        <!-- Bot Status Header -->
+        <div class="bot-status-header-box" style="background: rgba(88, 101, 242, 0.1); border: 1px solid rgba(88, 101, 242, 0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #fff; font-size: 0.92rem;">
+            <span style="width: 10px; height: 10px; border-radius: 50%; background: #2ED573; box-shadow: 0 0 10px #2ED573; display: inline-block;"></span>
+            <span>نظام النشر التلقائي عبر بوت الديسكورد 🤖</span>
+          </div>
+          <span style="font-size: 0.82rem; color: #93A4F8; font-weight: 600;"><i class="fa-solid fa-bullhorn"></i> روم الإعلانات الرسمي</span>
+        </div>
+
+        <!-- Alert Box for Publishing Feedback (Top of form) -->
+        <div id="publishAlertBox" class="publish-alert-box" style="margin-bottom: 16px;"></div>
+
+        <!-- Announcement Form (Direct Bot Dispatch) -->
+        <form id="announcerForm" class="announcer-form" novalidate>
+          <div class="form-group-modal">
+            <label for="announcePlatform"><i class="fa-solid fa-layer-group"></i> المنصة المستهدفة:</label>
+            <select id="announcePlatform">
+              <option value="youtube">🔴 YouTube (فيديو جديد على القناة)</option>
+              <option value="tiktok">⚫ TikTok (مقطع أو كواليس جديدة)</option>
+              <option value="instagram">🟣 Instagram (بوست أو ريل إنستغرام)</option>
+              <option value="general">📢 إشعار وتنبيه عام</option>
+            </select>
+          </div>
+
+          <div class="form-group-modal">
+            <label for="announceTitle"><i class="fa-solid fa-heading"></i> عنوان الإشعار:</label>
+            <input type="text" id="announceTitle" placeholder="مثال: فيديو جديد نزل على القناة! 🔥">
+          </div>
+
+          <div class="form-group-modal">
+            <label for="announceLink"><i class="fa-solid fa-link"></i> رابط المنشور أو الفيديو:</label>
+            <input type="url" id="announceLink" placeholder="https://..." dir="ltr">
+          </div>
+
+          <div class="form-group-modal">
+            <label for="announceMessage"><i class="fa-solid fa-comment-dots"></i> رسالة أو وصف إضافي (اختياري):</label>
+            <textarea id="announceMessage" rows="3" placeholder="اكتب رسالة موجهة لمتابعي الديسكورد..."></textarea>
+          </div>
+
+          <button type="submit" class="discord-publish-btn" id="sendAnnouncementBtn">
+            <i class="fa-brands fa-discord"></i>
+            <span>🚀 إرسال ونشر الإشعار في سيرفر الديسكورد الآن</span>
+          </button>
+        </form>
+
+        <!-- History Section -->
+        <div class="announcement-history-section" style="margin-top: 20px;">
+          <h4><i class="fa-solid fa-clock-rotate-left"></i> سجل آخر الإشعارات المنشورة</h4>
+          <div id="announcementsHistoryList" class="history-list">
+            <p class="empty-history">لا توجد إشعارات مسجلة حتى الآن.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Big Prominent Success Confirmation Modal -->
+  <div class="modal-overlay" id="publishSuccessModal">
+    <div class="modal-card auth-card" style="text-align: center; border-color: rgba(46, 213, 115, 0.6); box-shadow: 0 16px 60px rgba(0,0,0,0.9), 0 0 35px rgba(46, 213, 115, 0.3);">
+      <div style="width: 75px; height: 75px; border-radius: 50%; background: rgba(46, 213, 115, 0.15); border: 2px solid #2ED573; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 2.2rem; color: #2ED573;">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin-bottom: 8px;">تم إرسال ونشر الإشعار بنجاح! 🎉</h3>
+      <p style="color: #A0AEC0; font-size: 0.95rem; line-height: 1.6; margin-bottom: 18px;">
+        تم نشر الإشعار رسمياً في سيرفر الديسكورد بروم <strong>#youtube-videos</strong> وتنبيه المتابعين الآن 🚀
+      </p>
+      <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; margin-bottom: 20px; text-align: right;">
+        <div style="font-size: 0.82rem; color: #8892B0; margin-bottom: 4px;">عنوان الإشعار المنشور:</div>
+        <div id="successModalTitle" style="font-weight: 700; color: #2ED573; font-size: 1rem; word-break: break-word;"></div>
+      </div>
+      <button type="button" id="closeSuccessModalBtn" class="primary-btn" style="width: 100%; justify-content: center; background: #2ED573; border-color: #2ED573; color: #000; font-weight: 800; font-size: 1rem; padding: 12px 20px; cursor: pointer;">
+        <i class="fa-solid fa-check"></i>
+        <span>رائع! تم تأكيد الإرسال</span>
+      </button>
     </div>
   </div>
 
@@ -160,10 +718,27 @@
 
   <!-- Footer -->
   <footer class="hub-footer">
-    <p>تم الإنشاء بواسطة <strong>Social Discord Hub</strong> • جميع الحقوق محفوظة &copy; <span id="currentYear"></span></p>
+    <p>تم التطوير بواسطة <strong>Horizon Services</strong> • جميع الحقوق محفوظة &copy; <span id="currentYear">2026</span></p>
+    <p class="footer-sub">Discord.js v14 Enterprise System • Hosted on Vercel</p>
   </footer>
 
   <!-- Scripts -->
-  <script src="js/app.js"></script>
+  <script>
+    window.openAdminModal = function() {
+      var authModal = document.getElementById("adminAuthModal");
+      var pubModal = document.getElementById("adminPublishModal");
+      var isAuth = (sessionStorage.getItem("admin_authenticated") === "1234" || localStorage.getItem("admin_authenticated") === "1234");
+      if (isAuth) {
+        if (authModal) { authModal.classList.remove("open"); authModal.style.display = "none"; }
+        if (pubModal) { pubModal.classList.add("open"); pubModal.style.display = "flex"; }
+      } else {
+        if (pubModal) { pubModal.classList.remove("open"); pubModal.style.display = "none"; }
+        if (authModal) { authModal.classList.add("open"); authModal.style.display = "flex"; }
+        var pinInp = document.getElementById("adminPinInput");
+        if (pinInp) { pinInp.value = ""; pinInp.focus(); }
+      }
+    };
+  </script>
+  <script src="js/app.js?v=8.5"></script>
 </body>
 </html>
