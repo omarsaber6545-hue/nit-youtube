@@ -2,6 +2,24 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/api/admin/socials/:id",
+      "destination": "/api/admin/socials?id=:id"
+    },
+    {
+      "source": "/api/admin/announcements/:id",
+      "destination": "/api/admin/announcements?id=:id"
+    },
+    {
+      "source": "/api/click/:platform",
+      "destination": "/api/click?platform=:platform"
+    },
+    {
+      "source": "/api/analytics/view",
+      "destination": "/api/analytics"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

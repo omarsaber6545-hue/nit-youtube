@@ -1,10 +1,10 @@
-const { readDatabase, writeDatabase, setCorsHeaders } = require('../../utils/dbHelper');
+const { readDatabase, writeDatabase, setCorsHeaders } = require('../lib/dbHelper');
 
 module.exports = async (req, res) => {
   setCorsHeaders(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { platform } = req.query;
+  const platform = req.query.platform || (req.body && req.body.platform);
   const db = readDatabase();
   const socials = db.socials || [];
   const item = socials.find(s => s.id === platform);

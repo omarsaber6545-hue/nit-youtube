@@ -1,4 +1,4 @@
-const { ADMIN_PIN, ADMIN_PASSWORD, setCorsHeaders } = require('../utils/dbHelper');
+const { ADMIN_PIN, ADMIN_PASSWORD, setCorsHeaders } = require('../../lib/dbHelper');
 
 module.exports = async (req, res) => {
   setCorsHeaders(res);

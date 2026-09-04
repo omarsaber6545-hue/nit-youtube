@@ -1,4 +1,4 @@
-const { readDatabase, writeDatabase, isAuthorized, setCorsHeaders } = require('../utils/dbHelper');
+const { readDatabase, writeDatabase, isAuthorized, setCorsHeaders } = require('../../lib/dbHelper');
 
 module.exports = async (req, res) => {
   setCorsHeaders(res);

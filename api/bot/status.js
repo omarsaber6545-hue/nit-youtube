@@ -1,4 +1,4 @@
-const { setCorsHeaders } = require('../utils/dbHelper');
+const { setCorsHeaders } = require('../../lib/dbHelper');
 
 module.exports = async (req, res) => {
   setCorsHeaders(res);
