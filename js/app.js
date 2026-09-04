@@ -321,6 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (publishAlertBox) publishAlertBox.style.display = "none";
     renderAnnouncementsHistory();
+    loadModalOAuthAndAutomation();
   }
 
   // Close modals
@@ -539,6 +540,252 @@ document.addEventListener("DOMContentLoaded", () => {
 
       announcementsHistoryList.appendChild(el);
     });
+  }
+
+  // ================= ADMIN MODAL TABS & OAUTH LOGIC ================= //
+  const btnTabOAuth = document.getElementById("btnTabOAuth");
+  const btnTabManual = document.getElementById("btnTabManual");
+  const btnTabWebhook = document.getElementById("btnTabWebhook");
+
+  const modalContentOAuth = document.getElementById("modalContentOAuth");
+  const modalContentManual = document.getElementById("modalContentManual");
+  const modalContentWebhook = document.getElementById("modalContentWebhook");
+
+  function switchAdminModalTab(targetTab) {
+    const tabs = [
+      { btn: btnTabOAuth, content: modalContentOAuth, id: "oauth-tab" },
+      { btn: btnTabManual, content: modalContentManual, id: "manual-tab" },
+      { btn: btnTabWebhook, content: modalContentWebhook, id: "webhook-tab" }
+    ];
+
+    tabs.forEach(t => {
+      if (!t.btn || !t.content) return;
+      if (t.id === targetTab) {
+        t.btn.style.background = "#E50914";
+        t.btn.style.color = "#fff";
+        t.content.style.display = "block";
+      } else {
+        t.btn.style.background = "rgba(255,255,255,0.08)";
+        t.btn.style.color = "#ccc";
+        t.content.style.display = "none";
+      }
+    });
+  }
+
+  if (btnTabOAuth) btnTabOAuth.addEventListener("click", () => switchAdminModalTab("oauth-tab"));
+  if (btnTabManual) btnTabManual.addEventListener("click", () => switchAdminModalTab("manual-tab"));
+  if (btnTabWebhook) btnTabWebhook.addEventListener("click", () => switchAdminModalTab("webhook-tab"));
+
+  // Elements for OAuth in Modal
+  const modalYtBadge = document.getElementById("modalYtBadge");
+  const modalYtAccount = document.getElementById("modalYtAccount");
+  const modalYtAccountName = document.getElementById("modalYtAccountName");
+  const modalYtConnectBtn = document.getElementById("modalYtConnectBtn");
+  const modalYtDisconnectBtn = document.getElementById("modalYtDisconnectBtn");
+  const modalCheckYtBtn = document.getElementById("modalCheckYtBtn");
+
+  const modalTtBadge = document.getElementById("modalTtBadge");
+  const modalTtAccount = document.getElementById("modalTtAccount");
+  const modalTtAccountName = document.getElementById("modalTtAccountName");
+  const modalTtConnectBtn = document.getElementById("modalTtConnectBtn");
+  const modalTtDisconnectBtn = document.getElementById("modalTtDisconnectBtn");
+
+  const modalIgBadge = document.getElementById("modalIgBadge");
+  const modalIgAccount = document.getElementById("modalIgAccount");
+  const modalIgAccountName = document.getElementById("modalIgAccountName");
+  const modalIgConnectBtn = document.getElementById("modalIgConnectBtn");
+  const modalIgDisconnectBtn = document.getElementById("modalIgDisconnectBtn");
+
+  const modalWebhookUrl = document.getElementById("modalWebhookUrl");
+  const modalCopyWebhookBtn = document.getElementById("modalCopyWebhookBtn");
+  const modalTestWebhookBtn = document.getElementById("modalTestWebhookBtn");
+
+  async function loadModalOAuthAndAutomation() {
+    try {
+      if (modalWebhookUrl) {
+        modalWebhookUrl.value = `${window.location.origin}/api/webhook/auto-post?key=horizon_auto_2026`;
+      }
+
+      const res = await fetch("/api/auth/status", {
+        headers: { Authorization: "Bearer 1234" }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const conn = data.connections || {};
+
+      // YouTube UI
+      if (conn.youtube?.connected) {
+        if (modalYtBadge) {
+          modalYtBadge.style.background = "rgba(16, 185, 129, 0.2)";
+          modalYtBadge.style.color = "#10B981";
+          modalYtBadge.textContent = "● متصل بنجاح";
+        }
+        if (modalYtAccount) modalYtAccount.style.display = "block";
+        if (modalYtAccountName) modalYtAccountName.textContent = conn.youtube.account?.name || "YouTube Channel";
+        if (modalYtConnectBtn) modalYtConnectBtn.style.display = "none";
+        if (modalYtDisconnectBtn) modalYtDisconnectBtn.style.display = "inline-block";
+      } else {
+        if (modalYtBadge) {
+          modalYtBadge.style.background = "rgba(255, 255, 255, 0.1)";
+          modalYtBadge.style.color = "#aaa";
+          modalYtBadge.textContent = "○ غير متصل";
+        }
+        if (modalYtAccount) modalYtAccount.style.display = "none";
+        if (modalYtConnectBtn) modalYtConnectBtn.style.display = "inline-flex";
+        if (modalYtDisconnectBtn) modalYtDisconnectBtn.style.display = "none";
+      }
+
+      // TikTok UI
+      if (conn.tiktok?.connected) {
+        if (modalTtBadge) {
+          modalTtBadge.style.background = "rgba(16, 185, 129, 0.2)";
+          modalTtBadge.style.color = "#10B981";
+          modalTtBadge.textContent = "● متصل بنجاح";
+        }
+        if (modalTtAccount) modalTtAccount.style.display = "block";
+        if (modalTtAccountName) modalTtAccountName.textContent = conn.tiktok.account?.name || "TikTok User";
+        if (modalTtConnectBtn) modalTtConnectBtn.style.display = "none";
+        if (modalTtDisconnectBtn) modalTtDisconnectBtn.style.display = "inline-block";
+      } else {
+        if (modalTtBadge) {
+          modalTtBadge.style.background = "rgba(255, 255, 255, 0.1)";
+          modalTtBadge.style.color = "#aaa";
+          modalTtBadge.textContent = "○ غير متصل";
+        }
+        if (modalTtAccount) modalTtAccount.style.display = "none";
+        if (modalTtConnectBtn) modalTtConnectBtn.style.display = "inline-flex";
+        if (modalTtDisconnectBtn) modalTtDisconnectBtn.style.display = "none";
+      }
+
+      // Instagram UI
+      if (conn.instagram?.connected) {
+        if (modalIgBadge) {
+          modalIgBadge.style.background = "rgba(16, 185, 129, 0.2)";
+          modalIgBadge.style.color = "#10B981";
+          modalIgBadge.textContent = "● متصل بنجاح";
+        }
+        if (modalIgAccount) modalIgAccount.style.display = "block";
+        if (modalIgAccountName) modalIgAccountName.textContent = conn.instagram.account?.name || "Instagram User";
+        if (modalIgConnectBtn) modalIgConnectBtn.style.display = "none";
+        if (modalIgDisconnectBtn) modalIgDisconnectBtn.style.display = "inline-block";
+      } else {
+        if (modalIgBadge) {
+          modalIgBadge.style.background = "rgba(255, 255, 255, 0.1)";
+          modalIgBadge.style.color = "#aaa";
+          modalIgBadge.textContent = "○ غير متصل";
+        }
+        if (modalIgAccount) modalIgAccount.style.display = "none";
+        if (modalIgConnectBtn) modalIgConnectBtn.style.display = "inline-flex";
+        if (modalIgDisconnectBtn) modalIgDisconnectBtn.style.display = "none";
+      }
+    } catch (err) {
+      console.error("Error loading modal OAuth data:", err);
+    }
+  }
+
+  // Copy Webhook Button
+  if (modalCopyWebhookBtn && modalWebhookUrl) {
+    modalCopyWebhookBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(modalWebhookUrl.value).then(() => {
+        showToast("تم نسخ رابط الـ Webhook بنجاح! 📋", "success");
+      });
+    });
+  }
+
+  // Check YouTube Now button
+  if (modalCheckYtBtn) {
+    modalCheckYtBtn.addEventListener("click", async () => {
+      modalCheckYtBtn.disabled = true;
+      modalCheckYtBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الفحص...';
+      try {
+        const res = await fetch("/api/cron/check-socials?key=horizon_auto_2026");
+        const data = await res.json();
+        if (data.results?.youtube?.status === "posted") {
+          showToast(`🚀 تم رصد فيديو جديد ونشره في الديسكورد: ${data.results.youtube.title}`, "success");
+        } else if (data.results?.youtube?.status === "up-to-date") {
+          showToast("القناة محدثة بالكامل، لا توجد فيديوهات جديدة لم تُنشر بعد ✅", "info");
+        } else {
+          showToast("تم فحص القناة بنجاح ✨", "info");
+        }
+        loadModalOAuthAndAutomation();
+      } catch (e) {
+        showToast("فشل الاتصال بخادم الفحص", "info");
+      } finally {
+        modalCheckYtBtn.disabled = false;
+        modalCheckYtBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> فحص الآن';
+      }
+    });
+  }
+
+  // Test Webhook button
+  if (modalTestWebhookBtn) {
+    modalTestWebhookBtn.addEventListener("click", async () => {
+      modalTestWebhookBtn.disabled = true;
+      modalTestWebhookBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الإرسال...';
+      try {
+        const res = await fetch("/api/webhook/auto-post", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            platform: "tiktok",
+            url: "https://www.tiktok.com/@horizon_services252",
+            title: "🎉 اختبار أتمتة الـ Webhook من لوحة التحكم السريعة!",
+            message: "نظام النشر التلقائي يعمل بنجاح 🚀",
+            secret: "horizon_auto_2026"
+          })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showToast("✅ تم إرسال الإشعار التجريبي للديسكورد بنجاح!", "success");
+        } else {
+          showToast(data.error || "فشل إرسال الإشعار التجريبي", "info");
+        }
+      } catch (e) {
+        showToast("تعذر الاتصال بالخادم", "info");
+      } finally {
+        modalTestWebhookBtn.disabled = false;
+        modalTestWebhookBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> إرسال منشور تجريبي للتأكد من الاتصال';
+      }
+    });
+  }
+
+  // Disconnect handler
+  async function modalDisconnect(platform) {
+    if (!confirm(`هل أنت متأكد من إلغاء ربط حساب ${platform}؟`)) return;
+    try {
+      const res = await fetch("/api/auth/disconnect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer 1234" },
+        body: JSON.stringify({ action: "disconnect", platform })
+      });
+      if (res.ok) {
+        showToast(`تم إلغاء ربط ${platform} بنجاح`, "info");
+        loadModalOAuthAndAutomation();
+      }
+    } catch (e) {
+      showToast("فشل إلغاء الربط", "info");
+    }
+  }
+
+  if (modalYtDisconnectBtn) modalYtDisconnectBtn.addEventListener("click", () => modalDisconnect("youtube"));
+  if (modalTtDisconnectBtn) modalTtDisconnectBtn.addEventListener("click", () => modalDisconnect("tiktok"));
+  if (modalIgDisconnectBtn) modalIgDisconnectBtn.addEventListener("click", () => modalDisconnect("instagram"));
+
+  // Auto-open modal if user was redirected from OAuth callback
+  const urlParams = new URLSearchParams(window.location.search);
+  const connectedPlatform = urlParams.get("connected");
+  const oauthError = urlParams.get("error");
+  const oauthMsg = urlParams.get("msg");
+  if (connectedPlatform || oauthError) {
+    sessionStorage.setItem("admin_authenticated", "1234");
+    openPublishModal();
+    switchAdminModalTab("oauth-tab");
+    if (connectedPlatform) {
+      showToast(`🎉 تم ربط حساب ${connectedPlatform} بنجاح عبر OAuth 2.0!`, "success");
+    } else if (oauthError) {
+      showToast(`⚠️ ${oauthMsg || "حدث خطأ أثناء التفويض"}`, "info");
+    }
+    window.history.replaceState({}, document.title, window.location.pathname);
   }
 
   // Initialize

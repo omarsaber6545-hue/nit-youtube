@@ -671,6 +671,12 @@ body {
   animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+.modal-card.publish-card {
+  max-width: 620px;
+  width: 95%;
+  max-height: 90vh;
+}
+
 @keyframes modalPop {
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
