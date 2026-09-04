@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { sendDiscordAnnouncement } = require('../../lib/announceHelper');
+const { sendDiscordAnnouncement } = require('../utils/announceHelper');
 
 function getDatabase() {
   const dbPaths = [

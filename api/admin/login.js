@@ -1,12 +1,10 @@
-const { ADMIN_PIN, ADMIN_PASSWORD, setCorsHeaders } = require('../../lib/dbHelper');
-
 module.exports = async (req, res) => {
-  setCorsHeaders(res);
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
   let body = req.body || {};
   if (typeof body === 'string') {
@@ -15,13 +13,12 @@ module.exports = async (req, res) => {
     } catch {}
   }
 
-  const { password, pin } = body;
-  const key = (password || pin || '').trim();
+  const pin = ((body && (body.password || body.pin)) || '').trim();
+  const validPins = [process.env.ADMIN_PIN || '1234', '1234', 'admin123'];
 
-  const validKeys = [ADMIN_PIN, ADMIN_PASSWORD, '1234', 'admin123'];
-  if (validKeys.includes(key)) {
+  if (validPins.includes(pin)) {
     return res.json({ success: true, message: 'تم تسجيل الدخول بنجاح' });
   }
 
-  return res.status(401).json({ success: false, error: 'رمز الدخول أو كلمة المرور غير صحيحة' });
+  return res.status(401).json({ success: false, error: 'رمز المرور غير صحيح' });
 };
