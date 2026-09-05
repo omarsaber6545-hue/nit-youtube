@@ -244,9 +244,17 @@ class BotService {
     const dividerPath = path.join(__dirname, '../assets/divider.png');
 
     const YOUTUBE_ROLE_ID = process.env.YOUTUBE_ROLE_ID || '1543682732486426776';
-    const announcementContent = platform === 'youtube'
-      ? `## 🔔 فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`
-      : `## 🔔 إشعار جديد للجميع | @everyone`;
+    const TIKTOK_ROLE_ID = process.env.TIKTOK_ROLE_ID || '1545261962152251522';
+    const INSTAGRAM_ROLE_ID = process.env.INSTAGRAM_ROLE_ID || '1545261963372662787';
+
+    let announcementContent = `## 🔔 إشعار جديد للجميع | @everyone`;
+    if (platform === 'youtube') {
+      announcementContent = `## 🔔 فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`;
+    } else if (platform === 'tiktok') {
+      announcementContent = `## 🎵 مقطع جديد على تيك توك | <@&${TIKTOK_ROLE_ID}>`;
+    } else if (platform === 'instagram') {
+      announcementContent = `## 📸 بوست جديد على إنستغرام | <@&${INSTAGRAM_ROLE_ID}>`;
+    }
 
     const sentMessage = await channel.send({
       content: announcementContent,
@@ -254,7 +262,7 @@ class BotService {
       components: [row],
       allowedMentions: {
         parse: ['everyone', 'users'],
-        roles: [YOUTUBE_ROLE_ID]
+        roles: [YOUTUBE_ROLE_ID, TIKTOK_ROLE_ID, INSTAGRAM_ROLE_ID].filter(Boolean)
       }
     });
 

@@ -122,12 +122,28 @@ module.exports = {
 
     try {
       const dividerPath = path.join(__dirname, '../../assets/divider.png');
-      const announcementContent = `## 🔔 إشعار جديد للجميع | @everyone\n> 🚀 **تم نشر محتوى جديد ومميز! تفقد التفاصيل بالأسفل:**`;
+      
+      const YOUTUBE_ROLE_ID = process.env.YOUTUBE_ROLE_ID || '1543682732486426776';
+      const TIKTOK_ROLE_ID = process.env.TIKTOK_ROLE_ID || '1545261962152251522';
+      const INSTAGRAM_ROLE_ID = process.env.INSTAGRAM_ROLE_ID || '1545261963372662787';
+
+      let announcementContent = `## 🔔 إشعار جديد للجميع | @everyone\n> 🚀 **تم نشر محتوى جديد ومميز! تفقد التفاصيل بالأسفل:**`;
+      if (platform === 'youtube') {
+        announcementContent = `## 🔔 فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>\n> 🚀 **تم نشر فيديو جديد! تفقد التفاصيل بالأسفل:**`;
+      } else if (platform === 'tiktok') {
+        announcementContent = `## 🎵 مقطع جديد على تيك توك | <@&${TIKTOK_ROLE_ID}>\n> 🚀 **تم نشر مقطع تيك توك جديد! تفقد التفاصيل بالأسفل:**`;
+      } else if (platform === 'instagram') {
+        announcementContent = `## 📸 بوست جديد على إنستغرام | <@&${INSTAGRAM_ROLE_ID}>\n> 🚀 **تم نشر منشور إنستغرام جديد! تفقد التفاصيل بالأسفل:**`;
+      }
 
       await targetChannel.send({
         content: announcementContent,
         embeds: [embed],
-        components: [row]
+        components: [row],
+        allowedMentions: {
+          parse: ['everyone', 'users'],
+          roles: [YOUTUBE_ROLE_ID, TIKTOK_ROLE_ID, INSTAGRAM_ROLE_ID].filter(Boolean)
+        }
       });
 
       if (fs.existsSync(dividerPath)) {

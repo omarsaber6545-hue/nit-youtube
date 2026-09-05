@@ -10,8 +10,9 @@ const DEFAULT_TOKEN = Buffer.from(
 
 const TOKEN = process.env.DISCORD_TOKEN || DEFAULT_TOKEN;
 const CHANNEL_ID = process.env.ANNOUNCE_CHANNEL_ID || '1543682822471163974';
-const ADMIN_PIN = process.env.ADMIN_PIN || '1234';
 const YOUTUBE_ROLE_ID = process.env.YOUTUBE_ROLE_ID || '1543682732486426776';
+const TIKTOK_ROLE_ID = process.env.TIKTOK_ROLE_ID || '1545261962152251522';
+const INSTAGRAM_ROLE_ID = process.env.INSTAGRAM_ROLE_ID || '1545261963372662787';
 
 async function getMediaImage(platform, url) {
   if (!url) return null;
@@ -233,16 +234,27 @@ module.exports = async (req, res) => {
     }
   }
 
-  const mentionHeader = platform === 'youtube'
-    ? `## 🔔 فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`
-    : '## 🔔 إشعار جديد للجميع | @everyone';
+  let mentionHeader = '## 🔔 إشعار جديد للجميع | @everyone';
+  let targetRoleId = null;
+  if (platform === 'youtube') {
+    targetRoleId = YOUTUBE_ROLE_ID;
+    mentionHeader = `## 🔔 فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`;
+  } else if (platform === 'tiktok') {
+    targetRoleId = TIKTOK_ROLE_ID;
+    mentionHeader = `## 🎵 مقطع جديد على تيك توك | <@&${TIKTOK_ROLE_ID}>`;
+  } else if (platform === 'instagram') {
+    targetRoleId = INSTAGRAM_ROLE_ID;
+    mentionHeader = `## 📸 بوست جديد على إنستغرام | <@&${INSTAGRAM_ROLE_ID}>`;
+  }
+
+  const allowedRoles = [YOUTUBE_ROLE_ID, TIKTOK_ROLE_ID, INSTAGRAM_ROLE_ID].filter(Boolean);
 
   const messagePayload = {
     content: mentionHeader,
     embeds: [embed],
     allowed_mentions: {
       parse: ['everyone', 'users'],
-      roles: [YOUTUBE_ROLE_ID]
+      roles: allowedRoles
     },
     components: [
       {

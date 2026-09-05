@@ -8,8 +8,9 @@ const DEFAULT_TOKEN = Buffer.from(
 ).toString('utf-8');
 
 const TOKEN = process.env.DISCORD_TOKEN || DEFAULT_TOKEN;
-const DEFAULT_CHANNEL_ID = process.env.ANNOUNCE_CHANNEL_ID || '1543682822471163974';
 const DEFAULT_YOUTUBE_ROLE_ID = process.env.YOUTUBE_ROLE_ID || '1543682732486426776';
+const DEFAULT_TIKTOK_ROLE_ID = process.env.TIKTOK_ROLE_ID || '1545261962152251522';
+const DEFAULT_INSTAGRAM_ROLE_ID = process.env.INSTAGRAM_ROLE_ID || '1545261963372662787';
 
 async function getMediaImage(platform, url) {
   if (!url) return null;
@@ -123,6 +124,8 @@ async function sendDiscordAnnouncement({
   message = '',
   channelId = DEFAULT_CHANNEL_ID,
   youtubeRoleId = DEFAULT_YOUTUBE_ROLE_ID,
+  tiktokRoleId = DEFAULT_TIKTOK_ROLE_ID,
+  instagramRoleId = DEFAULT_INSTAGRAM_ROLE_ID,
   token = TOKEN
 }) {
   if (!title || !link) {
@@ -210,16 +213,27 @@ async function sendDiscordAnnouncement({
     }
   }
 
-  const mentionHeader = platform === 'youtube'
-    ? `## 🔔 فيديو جديد على اليوتيوب | <@&${youtubeRoleId}>`
-    : '## 🔔 إشعار جديد للجميع | @everyone';
+  let mentionHeader = '## 🔔 إشعار جديد للجميع | @everyone';
+  if (platform === 'youtube') {
+    mentionHeader = `## 🔔 فيديو جديد على اليوتيوب | <@&${youtubeRoleId || DEFAULT_YOUTUBE_ROLE_ID}>`;
+  } else if (platform === 'tiktok') {
+    mentionHeader = `## 🎵 مقطع جديد على تيك توك | <@&${tiktokRoleId || DEFAULT_TIKTOK_ROLE_ID}>`;
+  } else if (platform === 'instagram') {
+    mentionHeader = `## 📸 بوست جديد على إنستغرام | <@&${instagramRoleId || DEFAULT_INSTAGRAM_ROLE_ID}>`;
+  }
+
+  const allowedRoles = [
+    youtubeRoleId || DEFAULT_YOUTUBE_ROLE_ID,
+    tiktokRoleId || DEFAULT_TIKTOK_ROLE_ID,
+    instagramRoleId || DEFAULT_INSTAGRAM_ROLE_ID
+  ].filter(Boolean);
 
   const messagePayload = {
     content: mentionHeader,
     embeds: [embed],
     allowed_mentions: {
       parse: ['everyone', 'users'],
-      roles: [youtubeRoleId]
+      roles: allowedRoles
     },
     components: [
       {
