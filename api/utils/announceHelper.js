@@ -216,11 +216,11 @@ async function sendDiscordAnnouncement({
 
   let mentionHeader = '## 🔔 إشعار جديد للجميع | @everyone';
   if (platform === 'youtube') {
-    mentionHeader = `## 🔔 فيديو جديد على اليوتيوب | <@&${youtubeRoleId || DEFAULT_YOUTUBE_ROLE_ID}>`;
+    mentionHeader = `## <:social_youtube:1545894377614745732> فيديو جديد على اليوتيوب | <@&${youtubeRoleId || DEFAULT_YOUTUBE_ROLE_ID}>`;
   } else if (platform === 'tiktok') {
-    mentionHeader = `## 🎵 مقطع جديد على تيك توك | <@&${tiktokRoleId || DEFAULT_TIKTOK_ROLE_ID}>`;
+    mentionHeader = `## <:social_tiktok:1545894401275068538> مقطع جديد على تيك توك | <@&${tiktokRoleId || DEFAULT_TIKTOK_ROLE_ID}>`;
   } else if (platform === 'instagram') {
-    mentionHeader = `## 📸 بوست جديد على إنستغرام | <@&${instagramRoleId || DEFAULT_INSTAGRAM_ROLE_ID}>`;
+    mentionHeader = `## <:social_instagram:1545894385567400016> بوست جديد على إنستغرام | <@&${instagramRoleId || DEFAULT_INSTAGRAM_ROLE_ID}>`;
   }
 
   const allowedRoles = [

@@ -249,11 +249,11 @@ class BotService {
 
     let announcementContent = `## 🔔 إشعار جديد للجميع | @everyone`;
     if (platform === 'youtube') {
-      announcementContent = `## 🔔 فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`;
+      announcementContent = `## <:social_youtube:1545894377614745732> فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`;
     } else if (platform === 'tiktok') {
-      announcementContent = `## 🎵 مقطع جديد على تيك توك | <@&${TIKTOK_ROLE_ID}>`;
+      announcementContent = `## <:social_tiktok:1545894401275068538> مقطع جديد على تيك توك | <@&${TIKTOK_ROLE_ID}>`;
     } else if (platform === 'instagram') {
-      announcementContent = `## 📸 بوست جديد على إنستغرام | <@&${INSTAGRAM_ROLE_ID}>`;
+      announcementContent = `## <:social_instagram:1545894385567400016> بوست جديد على إنستغرام | <@&${INSTAGRAM_ROLE_ID}>`;
     }
 
     const sentMessage = await channel.send({

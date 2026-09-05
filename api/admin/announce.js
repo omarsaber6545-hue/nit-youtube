@@ -239,13 +239,13 @@ module.exports = async (req, res) => {
   let targetRoleId = null;
   if (platform === 'youtube') {
     targetRoleId = YOUTUBE_ROLE_ID;
-    mentionHeader = `## 🔔 فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`;
+    mentionHeader = `## <:social_youtube:1545894377614745732> فيديو جديد على اليوتيوب | <@&${YOUTUBE_ROLE_ID}>`;
   } else if (platform === 'tiktok') {
     targetRoleId = TIKTOK_ROLE_ID;
-    mentionHeader = `## 🎵 مقطع جديد على تيك توك | <@&${TIKTOK_ROLE_ID}>`;
+    mentionHeader = `## <:social_tiktok:1545894401275068538> مقطع جديد على تيك توك | <@&${TIKTOK_ROLE_ID}>`;
   } else if (platform === 'instagram') {
     targetRoleId = INSTAGRAM_ROLE_ID;
-    mentionHeader = `## 📸 بوست جديد على إنستغرام | <@&${INSTAGRAM_ROLE_ID}>`;
+    mentionHeader = `## <:social_instagram:1545894385567400016> بوست جديد على إنستغرام | <@&${INSTAGRAM_ROLE_ID}>`;
   }
 
   const allowedRoles = [YOUTUBE_ROLE_ID, TIKTOK_ROLE_ID, INSTAGRAM_ROLE_ID].filter(Boolean);
