@@ -437,7 +437,12 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify(payload)
         });
 
-        const data = await res.json();
+        let data;
+        try {
+          data = await res.json();
+        } catch (parseErr) {
+          throw new Error('حدث خطأ في الخادم أثناء معالجة الطلب (Server Error)');
+        }
 
         if (res.ok && data.success) {
           // 1. Show Big Celebratory Success Modal
