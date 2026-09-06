@@ -368,13 +368,12 @@ module.exports = async (req, res) => {
           color: platformColors[platform] || 15024404,
           description:
             `تم نشر إعلان جديد من لوحة تحكم الويب وتوجيهه إلى الروم <#${CHANNEL_ID}>.\n\n` +
-            `• 📌 **العنوان:** **${title}**\n` +
+            `• 📌 **العنوان:** **${title.trim()}**\n` +
             `• 🌐 **المنصة:** ${platformLabels[platform] || platform}\n` +
             `• 🔗 **الرابط المباشر:** [اضغط هنا للمشاهدة والتفاعل](${cleanLink})\n` +
-            (message ? `• 💬 **الرسالة الإضافية:**\n> ${message}\n` : '') +
+            (message && message.trim() ? `• 💬 **الرسالة الإضافية:**\n> ${message.trim()}\n` : '') +
             `• 📢 **روم النشر:** <#${CHANNEL_ID}>\n` +
             `• 👤 **المصدر:** لوحة تحكم الويب (Horizon Web)`,
-          image: mediaImage?.url ? { url: mediaImage.url } : undefined,
           footer: {
             text: 'Horizon Services • سجل السوشيال ميديا والإعلانات'
           },
@@ -398,14 +397,55 @@ module.exports = async (req, res) => {
           ]
         };
 
-        await fetch(`https://discord.com/api/v10/channels/${OWNER_SOCIAL_MEDIA_CHANNEL_ID}/messages`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bot ${TOKEN}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(ownerPayload)
-        });
+        let ownerSendSuccess = false;
+
+        // If postImageBuffer exists, try sending as multipart formData
+        if (postImageBuffer) {
+          try {
+            ownerEmbed.image = { url: 'attachment://post_image.jpg' };
+            const ownerFormData = new FormData();
+            ownerFormData.append('payload_json', JSON.stringify(ownerPayload));
+            const postBlob = new Blob([postImageBuffer], { type: 'image/jpeg' });
+            ownerFormData.append('files[0]', postBlob, 'post_image.jpg');
+
+            const oRes = await fetch(`https://discord.com/api/v10/channels/${OWNER_SOCIAL_MEDIA_CHANNEL_ID}/messages`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bot ${TOKEN}`
+              },
+              body: ownerFormData
+            });
+
+            if (oRes.ok) {
+              ownerSendSuccess = true;
+            }
+          } catch (fdErr) {
+            console.error('Owner FormData send failed, falling back to JSON:', fdErr);
+          }
+        }
+
+        // Fallback or direct JSON if no buffer or multipart failed
+        if (!ownerSendSuccess) {
+          if (mediaResult && mediaResult.url) {
+            ownerEmbed.image = { url: mediaResult.url };
+          } else {
+            delete ownerEmbed.image;
+          }
+
+          const oRes = await fetch(`https://discord.com/api/v10/channels/${OWNER_SOCIAL_MEDIA_CHANNEL_ID}/messages`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bot ${TOKEN}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ownerPayload)
+          });
+
+          if (!oRes.ok) {
+            const errBody = await oRes.text();
+            console.error('Owner channel notification JSON send failed:', oRes.status, errBody);
+          }
+        }
       } catch (ownerErr) {
         console.error('Owner channel notification error:', ownerErr);
       }
