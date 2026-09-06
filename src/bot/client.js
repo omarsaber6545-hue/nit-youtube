@@ -284,6 +284,44 @@ class BotService {
       sentBy: 'Web Dashboard'
     });
 
+    // Notify Owner Social Media Channel with full details
+    const OWNER_SOCIAL_MEDIA_CHANNEL_ID = process.env.OWNER_SOCIAL_MEDIA_CHANNEL_ID || '1545987661511139399';
+    try {
+      const ownerChannel = await this.client.channels.fetch(OWNER_SOCIAL_MEDIA_CHANNEL_ID).catch(() => null);
+      if (ownerChannel && ownerChannel.isTextBased()) {
+        const ownerLogEmbed = new EmbedBuilder()
+          .setColor(colors[platform] || '#E53935')
+          .setTitle('📱 تم نشر إعلان جديد من لوحة التحكم | New Announcement')
+          .setDescription(
+            `تم نشر إعلان جديد بنجاح وتوجيهه إلى الروم ${channel}.\n\n` +
+            `• 📌 **العنوان:** **${title}**\n` +
+            `• 🌐 **المنصة:** ${currentPlat.name}\n` +
+            `• 🔗 **الرابط:** [اضغط هنا للمشاهدة والتفاعل](${link})\n` +
+            `${message ? `• 💬 **الرسالة الإضافية:**\n> ${message}\n` : ''}` +
+            `• 👤 **المصدر:** لوحة تحكم الويب (Horizon Web Dashboard)\n` +
+            `• 📢 **روم النشر:** ${channel}\n` +
+            `${sentMessage ? `• 🔗 **رسالة الإعلان:** [انقر هنا للانتقال إليها](${sentMessage.url})` : ''}`
+          )
+          .setFooter({ text: 'Horizon Services • سجل الإعلانات والسوشيال ميديا' })
+          .setTimestamp();
+
+        if (postImageUrl) {
+          ownerLogEmbed.setImage(postImageUrl);
+        }
+
+        const ownerRow = new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
+            .setLabel('فتح الإعلان الأصلي 🔗')
+            .setURL(link)
+            .setStyle(ButtonStyle.Link)
+        );
+
+        await ownerChannel.send({ embeds: [ownerLogEmbed], components: [ownerRow] }).catch(() => {});
+      }
+    } catch (ownerErr) {
+      console.error('[Discord Bot] Error sending log to owner social media channel:', ownerErr);
+    }
+
     return { success: true, channelName: channel.name };
   }
 

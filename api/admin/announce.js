@@ -14,6 +14,7 @@ const ADMIN_PIN = process.env.ADMIN_PIN || '1234';
 const YOUTUBE_ROLE_ID = process.env.YOUTUBE_ROLE_ID || '1543682732486426776';
 const TIKTOK_ROLE_ID = process.env.TIKTOK_ROLE_ID || '1545261962152251522';
 const INSTAGRAM_ROLE_ID = process.env.INSTAGRAM_ROLE_ID || '1545261963372662787';
+const OWNER_SOCIAL_MEDIA_CHANNEL_ID = process.env.OWNER_SOCIAL_MEDIA_CHANNEL_ID || '1545987661511139399';
 
 async function getMediaImage(platform, url) {
   if (!url) return null;
@@ -358,6 +359,55 @@ module.exports = async (req, res) => {
         }
       } catch (divErr) {
         console.error('Divider send error:', divErr);
+      }
+
+      // Notify Owner Social Media Channel with details
+      try {
+        const ownerEmbed = {
+          title: '📱 إشعار جديد تم نشره | Social Media Post',
+          color: platformColors[platform] || 15024404,
+          description:
+            `تم نشر إعلان جديد من لوحة تحكم الويب وتوجيهه إلى الروم <#${CHANNEL_ID}>.\n\n` +
+            `• 📌 **العنوان:** **${title}**\n` +
+            `• 🌐 **المنصة:** ${platformLabels[platform] || platform}\n` +
+            `• 🔗 **الرابط المباشر:** [اضغط هنا للمشاهدة والتفاعل](${cleanLink})\n` +
+            (message ? `• 💬 **الرسالة الإضافية:**\n> ${message}\n` : '') +
+            `• 📢 **روم النشر:** <#${CHANNEL_ID}>\n` +
+            `• 👤 **المصدر:** لوحة تحكم الويب (Horizon Web)`,
+          image: mediaImage?.url ? { url: mediaImage.url } : undefined,
+          footer: {
+            text: 'Horizon Services • سجل السوشيال ميديا والإعلانات'
+          },
+          timestamp: new Date().toISOString()
+        };
+
+        const ownerPayload = {
+          embeds: [ownerEmbed],
+          components: [
+            {
+              type: 1,
+              components: [
+                {
+                  type: 2,
+                  style: 5,
+                  label: 'فتح الرابط الأصلي 🔗',
+                  url: cleanLink
+                }
+              ]
+            }
+          ]
+        };
+
+        await fetch(`https://discord.com/api/v10/channels/${OWNER_SOCIAL_MEDIA_CHANNEL_ID}/messages`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bot ${TOKEN}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(ownerPayload)
+        });
+      } catch (ownerErr) {
+        console.error('Owner channel notification error:', ownerErr);
       }
 
       return res.status(200).json({
